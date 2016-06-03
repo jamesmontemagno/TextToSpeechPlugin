@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.TTS.Abstractions", "Plugin.TTS.Abstractions\Plugin.TTS.Abstractions.csproj", "{6D8696FC-961B-4321-8294-4AD3CBB05615}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeech.Plugin.Abstractions", "TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj", "{6D8696FC-961B-4321-8294-4AD3CBB05615}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.TTS.iOS", "Plugin.TTS.iOS\Plugin.TTS.iOS.csproj", "{B8FFED65-2E40-4C2F-B527-8FBE609823F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeech.Plugin.iOS", "TextToSpeech.Plugin.iOS\TextToSpeech.Plugin.iOS.csproj", "{B8FFED65-2E40-4C2F-B527-8FBE609823F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.TTS.Android", "Plugin.TTS.Android\Plugin.TTS.Android.csproj", "{C0AEE080-F351-47BA-9489-FBB2C07D43AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeech.Plugin.Android", "TextToSpeech.Plugin.Android\TextToSpeech.Plugin.Android.csproj", "{C0AEE080-F351-47BA-9489-FBB2C07D43AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.TTS.WinPhone", "Plugin.TTS.WinPhone\Plugin.TTS.WinPhone.csproj", "{6EC1BD3C-A012-4A77-9F1D-BD1347953524}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeech.Plugin.WinPhone", "TextToSpeech.Plugin.WinPhone\TextToSpeech.Plugin.WinPhone.csproj", "{6EC1BD3C-A012-4A77-9F1D-BD1347953524}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.TTS", "Plugin.TTS\Plugin.TTS.csproj", "{331ED33C-4327-4712-833A-828AB084EA97}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeech.Plugin", "TextToSpeech.Plugin\TextToSpeech.Plugin.csproj", "{331ED33C-4327-4712-833A-828AB084EA97}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{55819672-21BC-4081-98B6-683372A5B34C}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,13 +22,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{55819672-2
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.TTS.iOSUnified", "Plugin.TTS.iOSUnified\Plugin.TTS.iOSUnified.csproj", "{CC4CA81F-6B30-4A3A-AE87-005350A885FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeech.Plugin.iOSUnified", "TextToSpeech.Plugin.iOSUnified\TextToSpeech.Plugin.iOSUnified.csproj", "{CC4CA81F-6B30-4A3A-AE87-005350A885FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.TTS.WinPhoneRT", "Plugin.TTS.WinPhoneRT\Plugin.TTS.WinPhoneRT.csproj", "{31D27A80-CFD5-46F9-B24E-B5982E7A686C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeech.Plugin.WinPhoneRT", "TextToSpeech.Plugin.WinPhoneRT\TextToSpeech.Plugin.WinPhoneRT.csproj", "{31D27A80-CFD5-46F9-B24E-B5982E7A686C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.TTS.WinStore", "Plugin.TTS.WinStore\Plugin.TTS.WinStore.csproj", "{4B11EBD1-C6F9-4CB7-BCD0-3A7D75B90702}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeech.Plugin.WinStore", "TextToSpeech.Plugin.WinStore\TextToSpeech.Plugin.WinStore.csproj", "{4B11EBD1-C6F9-4CB7-BCD0-3A7D75B90702}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.TTS.UWP", "Plugin.TTS.UWP\Plugin.TTS.UWP.csproj", "{3C6DDA62-2B68-4199-A58B-5E2171268FAA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeech.Plugin.UWP", "TextToSpeech.Plugin.UWP\TextToSpeech.Plugin.UWP.csproj", "{3C6DDA62-2B68-4199-A58B-5E2171268FAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

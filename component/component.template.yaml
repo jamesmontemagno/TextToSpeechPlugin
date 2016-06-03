@@ -25,11 +25,11 @@ samples:
   - name: TextToSpeech Samples (iOS, Android, and Windows)
     path: "../samples/TextToSpeechSample.sln"
     removeProjects: 
-      - Plugin.TextToSpeech
-      - Plugin.TextToSpeech.Abstractions
-      - Plugin.TextToSpeech.Android
-      - Plugin.VibTextToSpeechrate.iOSUnified
-      - Plugin.TextToSpeech.WinPhone
+      - TextToSpeech.Plugin
+      - TextToSpeech.Plugin.Abstractions
+      - TextToSpeech.Plugin.Android
+      - TextToSpeech.Plugin.iOSUnified
+      - TextToSpeech.Plugin.WinPhone
     installNuGets:
       - project: TextToSpeechSample
         packages: 
