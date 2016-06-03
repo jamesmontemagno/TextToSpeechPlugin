@@ -1,46 +1,14 @@
-## ![](Common/tts_icon_large.png) Text To Speech
-
-Simple but elegant way of performing Text To Speech across Xamarni.iOS, Xamarin.Android,  Windows Phone, and Windows Store Projects.
-
-Preview: http://screencast.com/t/voW1P48Ka
-
-### Features
-* Speak back text
-* Pitch
-* Volume
-* Speak Rate
-* Locale/Language of Speech
-* Decide to queue speech block
-* Gather all available languages to speak in
-
-
-### Setup
-* Available on NuGet: https://www.nuget.org/packages/Xam.Plugins.TextToSpeech/ [![NuGet](https://img.shields.io/nuget/v/Xam.Plugins.TextToSpeech.svg?label=NuGet)](https://www.nuget.org/packages/Xam.Plugins.TextToSpeech/)
-* Install into your PCL project and Client projects.
-
-**Platform Support**
-
-|Platform|Supported|Version|
-| ------------------- | :-----------: | :------------------: |
-|Xamarin.iOS|Yes|iOS 7+|
-|Xamarin.iOS Unified|Yes|iOS 7+|
-|Xamarin.Android|Yes|API 10+|
-|Windows Phone Silverlight|Yes|8.0+|
-|Windows Phone RT|Yes|8.1+|
-|Windows Store RT|Yes|8.1+|
-|Windows 10 UWP|Yes|10+|
-|Xamarin.Mac|No||
-
+# Getting Started with Text To Speech Plugin
 
 ### Usage
 
 **Simple Text**
-```csharp
+```
 CrossTextToSpeech.Current.Speak("Text to speak");
 ```
 
 **Advanced speech API**
-```csharp
+```
 /// <summary>
 /// Speack back text
 /// </summary>
@@ -58,7 +26,7 @@ I developed the CrossLocale struct mostly to support Android, but is nice becaus
 
 You can query a list of current support CrossLocales on the device:
 
-```csharp
+```
 /// <summary>
 /// Get all installed and valide lanaguages
 /// </summary>
@@ -73,15 +41,3 @@ Each local has the Language and Display Name. The Country code is only used in A
 * iOS: AVSpeechSynthesizer
 * Android: Android.Speech.Tts.TextToSpeech
 * Windows Phone: SpeechSynthesizer + Ssml support for advanced playback
-
-
-**Windows Phone**
-You must add ID_CAP_SPEECH_RECOGNITION permission
-
-#### Contributors
-* [jamesmontemagno](https://github.com/jamesmontemagno)
-
-Thanks!
-
-#### License
-Licensed under main repo license
