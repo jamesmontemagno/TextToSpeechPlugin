@@ -15,8 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.TTS", "Plugin.TTS\Pl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{55819672-21BC-4081-98B6-683372A5B34C}"
 	ProjectSection(SolutionItems) = preProject
+		..\appveyor.yml = ..\appveyor.yml
 		..\ci\build.cake = ..\ci\build.cake
+		..\component\component.template.yaml = ..\component\component.template.yaml
 		..\ci\Plugin.nuspec = ..\ci\Plugin.nuspec
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.TTS.iOSUnified", "Plugin.TTS.iOSUnified\Plugin.TTS.iOSUnified.csproj", "{CC4CA81F-6B30-4A3A-AE87-005350A885FB}"
