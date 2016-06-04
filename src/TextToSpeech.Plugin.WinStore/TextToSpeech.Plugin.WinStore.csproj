@@ -112,7 +112,7 @@
     <Compile Include="..\TextToSpeech.Plugin.WinPhone\TextToSpeech.cs">
       <Link>TextToSpeech.cs</Link>
     </Compile>
-    <Compile Include="..\TextToSpeech.PluginCrossTextToSpeech.cs">
+    <Compile Include="..\TextToSpeech.Plugin\CrossTextToSpeech.cs">
       <Link>CrossTextToSpeech.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
