@@ -80,10 +80,10 @@ Each local has the Language and Display Name. The Country code is only used in A
 **Windows Phone**
 You must add ID_CAP_SPEECH_RECOGNITION permission
 
-#### Contributors
-* [jamesmontemagno](https://github.com/jamesmontemagno)
+#### Contributions
+Contributions are welcome! If you find a bug please report it and if you want a feature please report it.
 
-Thanks!
+If you want to contribute code please file an issue and create a branch off of the current dev branch and file a pull request.
 
 #### License
-Licensed under main repo license
+Under MIT, see LICENSE file.
