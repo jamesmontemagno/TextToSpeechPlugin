@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Refractored.Xam.TTS\CrossTextToSpeech.cs">
+    <Compile Include="..\TextToSpeech.Plugin\CrossTextToSpeech.cs">
       <Link>CrossTextToSpeech.cs</Link>
     </Compile>
     <Compile Include="TextToSpeech.cs" />
@@ -56,9 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\Values\Strings.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">

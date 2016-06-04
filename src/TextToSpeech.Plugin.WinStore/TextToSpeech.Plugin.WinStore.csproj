@@ -105,14 +105,14 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <ProjectReference Include="..\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
       <Project>{6d8696fc-961b-4321-8294-4ad3cbb05615}</Project>
-      <Name>Refractored.Xam.TTS.Abstractions</Name>
+      <Name>TextToSpeech.Plugin.Abstractions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Refractored.Xam.TTS.WinPhone\TextToSpeech.cs">
+    <Compile Include="..\TextToSpeech.Plugin.WinPhone\TextToSpeech.cs">
       <Link>TextToSpeech.cs</Link>
     </Compile>
-    <Compile Include="..\Refractored.Xam.TTS\CrossTextToSpeech.cs">
+    <Compile Include="..\TextToSpeech.PluginCrossTextToSpeech.cs">
       <Link>CrossTextToSpeech.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

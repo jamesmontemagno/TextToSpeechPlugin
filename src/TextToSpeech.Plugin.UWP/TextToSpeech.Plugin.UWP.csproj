@@ -109,10 +109,10 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Refractored.Xam.TTS.WinPhone\TextToSpeech.cs">
+    <Compile Include="..\TextToSpeech.Plugin.WinPhone\TextToSpeech.cs">
       <Link>TextToSpeech.cs</Link>
     </Compile>
-    <Compile Include="..\Refractored.Xam.TTS\CrossTextToSpeech.cs">
+    <Compile Include="..\TextToSpeech.Plugin\CrossTextToSpeech.cs">
       <Link>CrossTextToSpeech.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -121,7 +121,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
       <Project>{6d8696fc-961b-4321-8294-4ad3cbb05615}</Project>
-      <Name>Refractored.Xam.TTS.Abstractions</Name>
+      <Name>TextToSpeech.Plugin.Abstractions</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
