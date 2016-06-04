@@ -1,6 +1,6 @@
-Text To Speech Plugin for Xamarin and Windows
+## Text To Speech Plugin for Xamarin and Windows
 
-Simple and elegant way of performing Text To Speech across Xamarin.iOS, Xamarin.Android, and Windows Projects.
+Simple and elegant way of performing Text To Speech across Xamarin.iOS, Xamarin.Android, Windows, and Xamarin.Forms projects.
 
 Preview: http://screencast.com/t/voW1P48Ka
 
@@ -9,7 +9,7 @@ Preview: http://screencast.com/t/voW1P48Ka
 * Available on NuGet: https://www.nuget.org/packages/Xam.Plugins.TextToSpeech/ [![NuGet](https://img.shields.io/nuget/v/Xam.Plugins.TextToSpeech.svg?label=NuGet)](https://www.nuget.org/packages/Xam.Plugins.TextToSpeech/)
 * Install into your PCL project and Client projects.
 
-Build [![Build status](https://ci.appveyor.com/api/projects/status/ucwvippb5awrsqmg?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/texttospeechplugin)
+Build status: [![Build status](https://ci.appveyor.com/api/projects/status/ucwvippb5awrsqmg?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/texttospeechplugin)
 
 **Platform Support**
 
