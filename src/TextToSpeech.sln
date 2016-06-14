@@ -16,9 +16,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{55819672-21BC-4081-98B6-683372A5B34C}"
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
-		..\ci\build.cake = ..\ci\build.cake
+		..\build.cake = ..\build.cake
 		..\component\component.template.yaml = ..\component\component.template.yaml
-		..\ci\Plugin.nuspec = ..\ci\Plugin.nuspec
+		..\nuget\Plugin.nuspec = ..\nuget\Plugin.nuspec
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
