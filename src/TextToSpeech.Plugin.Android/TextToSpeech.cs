@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Plugin.TextToSpeech.Abstractions;
 using Java.Util;
 using Android.Speech.Tts;
 using Android.App;
-using Android.OS;
 
 namespace Plugin.TextToSpeech
 {
@@ -19,25 +19,23 @@ namespace Plugin.TextToSpeech
         string text;
         CrossLocale? language;
         float pitch, speakRate;
-        bool queue;
         bool initialized;
 
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public TextToSpeech()
-        {
-        }
 
-        /// <summary>
-        /// Initialize TTS
-        /// </summary>
-        public void Init()
+
+        TaskCompletionSource<bool> initTcs;
+        Task Init()
         {
+            if (initialized)
+                return Task.FromResult(true);
+
+            this.initTcs = new TaskCompletionSource<bool>();
+
             Console.WriteLine("Current version: " + (int)global::Android.OS.Build.VERSION.SdkInt);
             Android.Util.Log.Info("CrossTTS", "Current version: " + (int)global::Android.OS.Build.VERSION.SdkInt);
-
             textToSpeech = new Android.Speech.Tts.TextToSpeech(Application.Context, this);
+
+            return this.initTcs.Task;
         }
 
         #region IOnInitListener implementation
@@ -47,10 +45,15 @@ namespace Plugin.TextToSpeech
         /// <param name="status"></param>
         public void OnInit(OperationResult status)
         {
+
             if (status.Equals(OperationResult.Success))
             {
-                initialized = true;
-                Speak();
+                this.initTcs.TrySetResult(true);
+                this.initialized = true;
+            }
+            else
+            {
+                this.initTcs.TrySetException(new ArgumentException("Failed to initialize TTS engine"));
             }
         }
         #endregion
@@ -59,27 +62,20 @@ namespace Plugin.TextToSpeech
         /// Speak back text
         /// </summary>
         /// <param name="text">Text to speak</param>
-        /// <param name="queue">If you want to chain together speak command or cancel current</param>
         /// <param name="crossLocale">Locale of voice</param>
         /// <param name="pitch">Pitch of voice</param>
         /// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
         /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
-        public void Speak(string text, bool queue = false, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null)
+        public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
         {
             this.text = text;
             this.language = crossLocale;
             this.pitch = pitch == null ? 1.0f : pitch.Value;
             this.speakRate = speakRate == null ? 1.0f : speakRate.Value;
-            this.queue = queue;
 
-            if (textToSpeech == null || !initialized)
-            {
-                Init();
-            }
-            else
-            {
-                Speak();
-            }
+            // TODO: need to wait lock so not to break people using queuing mechanism
+            await this.Init();
+            await Speak(cancelToken);
         }
 
 
@@ -88,7 +84,7 @@ namespace Plugin.TextToSpeech
 
 
             SetDefaultLanguageNonLollipop();
-            
+
         }
 
         private void SetDefaultLanguageNonLollipop()
@@ -125,7 +121,7 @@ namespace Plugin.TextToSpeech
         }
 
         /// <summary>
-        /// In a different method as it can crash on older target/compile for some reason   
+        /// In a different method as it can crash on older target/compile for some reason
         /// </summary>
         private void SetDefaultLanguageLollipop()
         {
@@ -142,13 +138,13 @@ namespace Plugin.TextToSpeech
 
         }
 
-        private void Speak()
+        Task Speak(CancellationToken? cancelToken)
         {
             if (string.IsNullOrWhiteSpace(text))
-                return;
+                return Task.CompletedTask;
 
-            if (!queue && textToSpeech.IsSpeaking)
-                textToSpeech.Stop();
+            //if (!queue && textToSpeech.IsSpeaking)
+            //    textToSpeech.Stop();
 
             if (language.HasValue && !string.IsNullOrWhiteSpace(language.Value.Language))
             {
@@ -174,9 +170,19 @@ namespace Plugin.TextToSpeech
                 SetDefaultLanguage();
             }
 
+            var tcs = new TaskCompletionSource<object>();
+            cancelToken?.Register(() =>
+            {
+                textToSpeech.Stop();
+                tcs.TrySetCanceled();
+            });
             textToSpeech.SetPitch(pitch);
             textToSpeech.SetSpeechRate(speakRate);
-            textToSpeech.Speak(text, queue ? QueueMode.Add : QueueMode.Flush, null);
+            textToSpeech.SetOnUtteranceProgressListener(new TtsProgressListener(tcs));
+            //textToSpeech.Speak(text, queue ? QueueMode.Add : QueueMode.Flush, null);
+            textToSpeech.Speak(text, QueueMode.Flush, null);
+
+            return tcs.Task;
         }
 
         /// <summary>

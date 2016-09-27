@@ -2,6 +2,8 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 #if NETFX_CORE
 using Windows.Media.SpeechSynthesis;
 using Windows.UI.Xaml.Controls;
@@ -26,18 +28,8 @@ namespace Plugin.TextToSpeech
     /// </summary>
     public TextToSpeech()
     {
-    }
-
-    /// <summary>
-    /// Initialization
-    /// </summary>
-    public void Init()
-    {
-      if(speechSynthesizer == null)
         speechSynthesizer = new SpeechSynthesizer();
-
 #if NETFX_CORE
-      if (element == null)
         element = new MediaElement();
 #endif
     }
@@ -46,23 +38,16 @@ namespace Plugin.TextToSpeech
     /// Speak back text
     /// </summary>
     /// <param name="text">Text to speak</param>
-    /// <param name="queue">If you want to chain together speak command or cancel current</param>
     /// <param name="crossLocale">Locale of voice</param>
     /// <param name="pitch">Pitch of voice</param>
     /// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
     /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
-    public async void Speak(string text, bool queue = false, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null)
+    public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
     {
+            // TODO: sync lock this to prevent multiple calls coming in
       if (string.IsNullOrWhiteSpace(text))
         return;
 
-      if (speechSynthesizer == null)
-        Init();
-
-#if !NETFX_CORE
-      if (!queue)
-        speechSynthesizer.CancelAll();
-#endif
       var localCode = string.Empty;
 
       //nothing fancy needed here
@@ -73,14 +58,14 @@ namespace Plugin.TextToSpeech
           localCode = crossLocale.Value.Language;
 #if NETFX_CORE
           var voices = from voice in SpeechSynthesizer.AllVoices
-                        where (voice.Language == localCode 
+                        where (voice.Language == localCode
                         && voice.Gender.Equals(VoiceGender.Female))
                         select voice;
           speechSynthesizer.Voice =(voices.Any() ? voices.ElementAt(0) : SpeechSynthesizer.DefaultVoice);
-       
+
 #else
           var voices = from voice in InstalledVoices.All
-                       where (voice.Language == localCode 
+                       where (voice.Language == localCode
                          && voice.Gender.Equals(VoiceGender.Female))
                          select voice;
           speechSynthesizer.SetVoice(voices.Any() ? voices.ElementAt(0) : InstalledVoices.Default);
@@ -107,9 +92,8 @@ namespace Plugin.TextToSpeech
           Debug.WriteLine("Unable to playback stream: " + ex);
         }
 #else
-        speechSynthesizer.SpeakTextAsync(text);
+        await speechSynthesizer.SpeakTextAsync(text);
 #endif
-        return;
       }
 
       if(crossLocale.HasValue && !string.IsNullOrWhiteSpace(crossLocale.Value.Language))
@@ -122,7 +106,7 @@ namespace Plugin.TextToSpeech
                      select voice;
 #else
         var voices = from voice in InstalledVoices.All
-                     where (voice.Language == localCode 
+                     where (voice.Language == localCode
                          && voice.Gender.Equals(VoiceGender.Female))
                          select voice;
 #endif
@@ -166,10 +150,10 @@ namespace Plugin.TextToSpeech
         pitchProsody = "medium";
       else if(pitch.Value >= .4f)
         pitchProsody = "low";
-      else 
+      else
         pitchProsody = "x-low";
 
-     
+
       string ssmlText = "<speak version=\"1.0\" ";
       ssmlText += "xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"" + localCode + "\">";
       ssmlText += "<prosody pitch=\""+pitchProsody+"\" volume=\""+volume.Value +"\" rate=\""+ speakRate.Value+"\" >" + text + "</prosody>";
@@ -188,7 +172,7 @@ namespace Plugin.TextToSpeech
 #else
       speechSynthesizer.SpeakSsmlAsync(ssmlText);
 #endif
-      
+
     }
 
     /// <summary>
