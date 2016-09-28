@@ -38,7 +38,7 @@ Build status: [![Build status](https://ci.appveyor.com/api/projects/status/ucwvi
 
 **Simple Text**
 ```csharp
-CrossTextToSpeech.Current.Speak("Text to speak");
+await CrossTextToSpeech.Current.Speak("Text to speak");
 ```
 
 **Advanced speech API**
@@ -47,12 +47,11 @@ CrossTextToSpeech.Current.Speak("Text to speak");
 /// Speack back text
 /// </summary>
 /// <param name="text">Text to speak</param>
-/// <param name="queue">If you want to chain together speak command or cancel current</param>
 /// <param name="crossLocale">Locale of voice</param>
 /// <param name="pitch">Pitch of voice (All 0.0 - 2.0f)</param>
 /// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
 /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
-public async void Speak(string text, bool queue = false, CrossLocale crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null)
+public async Task Speak(string text, CrossLocale crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null)
 ```  
 
 **CrossLocale**
