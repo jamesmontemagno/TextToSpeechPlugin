@@ -149,15 +149,10 @@ namespace Plugin.TextToSpeech
         TaskCompletionSource<object> currentSpeak;
         async Task SpeakUtterance(AVSpeechUtterance speechUtterance, CancellationToken? cancelToken)
         {
-            if (speechSynthesizer.Speaking)
-            {
-                TryCancel();
-            }
-
             currentSpeak = new TaskCompletionSource<object>();
             cancelToken?.Register(() => TryCancel());
             speechSynthesizer.SpeakUtterance(speechUtterance);
-            var handler = new EventHandler<AVSpeechSynthesizerUteranceEventArgs>((sender, args) => currentSpeak.TrySetResult(null));
+            var handler = new EventHandler<AVSpeechSynthesizerUteranceEventArgs>((sender, args) => TryCancel());
             speechSynthesizer.DidFinishSpeechUtterance += handler;
 
             await currentSpeak.Task;

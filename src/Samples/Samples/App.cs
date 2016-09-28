@@ -33,6 +33,7 @@ namespace Samples
                         cancelSrc = null;
                     }
                 }
+                catch (OperationCanceledException) {}
                 catch (Exception ex)
                 {
                     lbl.Text = ex.ToString();
