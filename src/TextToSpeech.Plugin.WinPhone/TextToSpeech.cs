@@ -19,6 +19,7 @@ namespace Plugin.TextToSpeech
   /// </summary>
   public class TextToSpeech : ITextToSpeech, IDisposable
   {
+      readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
     SpeechSynthesizer speechSynthesizer;
 #if NETFX_CORE
     MediaElement element;
@@ -48,6 +49,7 @@ namespace Plugin.TextToSpeech
       if (string.IsNullOrWhiteSpace(text))
         return;
 
+        await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
       var localCode = string.Empty;
 
       //nothing fancy needed here

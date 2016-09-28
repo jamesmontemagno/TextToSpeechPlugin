@@ -20,6 +20,7 @@ namespace Plugin.TextToSpeech
     public class TextToSpeech : ITextToSpeech, IDisposable
     {
         readonly AVSpeechSynthesizer speechSynthesizer;
+        readonly SemaphoreSlim semaphore;
 
 
         /// <summary>
@@ -28,6 +29,7 @@ namespace Plugin.TextToSpeech
         public TextToSpeech()
         {
             speechSynthesizer = new AVSpeechSynthesizer();
+            semaphore = new SemaphoreSlim(1, 1);
         }
 
 
@@ -39,13 +41,14 @@ namespace Plugin.TextToSpeech
         /// <param name="pitch">Pitch of voice</param>
         /// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
         /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
-        public Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
+        public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
         {
             if (string.IsNullOrWhiteSpace(text))
-                return Task.CompletedTask;
+                return;
 
+            await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
             var speechUtterance = GetSpeechUtterance(text, crossLocale, pitch, speakRate, volume);
-            return SpeakUtterance(speechUtterance, cancelToken);
+            await SpeakUtterance(speechUtterance, cancelToken);
         }
 
         /// <summary>

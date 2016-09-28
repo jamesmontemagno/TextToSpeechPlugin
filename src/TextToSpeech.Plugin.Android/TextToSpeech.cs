@@ -15,6 +15,7 @@ namespace Plugin.TextToSpeech
     /// </summary>
     public class TextToSpeech : Java.Lang.Object, ITextToSpeech, Android.Speech.Tts.TextToSpeech.IOnInitListener, IDisposable
     {
+        readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
         Android.Speech.Tts.TextToSpeech textToSpeech;
         string text;
         CrossLocale? language;
@@ -45,7 +46,6 @@ namespace Plugin.TextToSpeech
         /// <param name="status"></param>
         public void OnInit(OperationResult status)
         {
-
             if (status.Equals(OperationResult.Success))
             {
                 this.initTcs.TrySetResult(true);
@@ -68,6 +68,7 @@ namespace Plugin.TextToSpeech
         /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
         public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
         {
+            await this.semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
             this.text = text;
             this.language = crossLocale;
             this.pitch = pitch == null ? 1.0f : pitch.Value;
@@ -143,9 +144,6 @@ namespace Plugin.TextToSpeech
             if (string.IsNullOrWhiteSpace(text))
                 return Task.CompletedTask;
 
-            //if (!queue && textToSpeech.IsSpeaking)
-            //    textToSpeech.Stop();
-
             if (language.HasValue && !string.IsNullOrWhiteSpace(language.Value.Language))
             {
                 Locale locale = null;
@@ -179,7 +177,6 @@ namespace Plugin.TextToSpeech
             textToSpeech.SetPitch(pitch);
             textToSpeech.SetSpeechRate(speakRate);
             textToSpeech.SetOnUtteranceProgressListener(new TtsProgressListener(tcs));
-            //textToSpeech.Speak(text, queue ? QueueMode.Add : QueueMode.Flush, null);
             textToSpeech.Speak(text, QueueMode.Flush, null);
 
             return tcs.Task;
