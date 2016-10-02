@@ -11,19 +11,19 @@ namespace Plugin.TextToSpeech
 
         public TtsProgressListener(TaskCompletionSource<object> tcs)
         {
-            this.completionSource = tcs;
+            completionSource = tcs;
         }
 
 
         public override void OnDone(string utteranceId)
         {
-            this.completionSource.TrySetResult(null);
+            completionSource.TrySetResult(null);
         }
 
 
         public override void OnError(string utteranceId)
         {
-            this.completionSource.TrySetException(new ArgumentException("Error with TTS engine on progress listener"));
+            completionSource.TrySetException(new ArgumentException("Error with TTS engine on progress listener"));
         }
 
 

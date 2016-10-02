@@ -46,9 +46,16 @@ namespace Plugin.TextToSpeech
             if (string.IsNullOrWhiteSpace(text))
                 return;
 
-            await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
-            var speechUtterance = GetSpeechUtterance(text, crossLocale, pitch, speakRate, volume);
-            await SpeakUtterance(speechUtterance, cancelToken);
+            try 
+            {                
+                await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
+                var speechUtterance = GetSpeechUtterance(text, crossLocale, pitch, speakRate, volume);
+                await SpeakUtterance(speechUtterance, cancelToken);
+            }
+            finally 
+            {
+                semaphore.Release();
+            }
         }
 
         /// <summary>
@@ -70,7 +77,8 @@ namespace Plugin.TextToSpeech
 
             if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
             {
-                speechUtterance = new AVSpeechUtterance(" ");
+                //speechUtterance = new AVSpeechUtterance(" ");
+                speechUtterance = new AVSpeechUtterance(text);
                 speechUtterance.Voice = voice;
             }
             else
@@ -149,14 +157,26 @@ namespace Plugin.TextToSpeech
         TaskCompletionSource<object> currentSpeak;
         async Task SpeakUtterance(AVSpeechUtterance speechUtterance, CancellationToken? cancelToken)
         {
-            currentSpeak = new TaskCompletionSource<object>();
-            cancelToken?.Register(() => TryCancel());
-            speechSynthesizer.SpeakUtterance(speechUtterance);
-            var handler = new EventHandler<AVSpeechSynthesizerUteranceEventArgs>((sender, args) => TryCancel());
-            speechSynthesizer.DidFinishSpeechUtterance += handler;
+            try 
+            {
+                currentSpeak = new TaskCompletionSource<object>();
+                cancelToken?.Register(() => TryCancel());
 
-            await currentSpeak.Task;
-            speechSynthesizer.DidFinishSpeechUtterance -= handler;
+                speechSynthesizer.DidFinishSpeechUtterance += this.OnFinishedSpeechUtterance;
+                speechSynthesizer.SpeakUtterance(speechUtterance);
+
+                await currentSpeak.Task;
+            }
+            finally 
+            {
+                speechSynthesizer.DidFinishSpeechUtterance -= this.OnFinishedSpeechUtterance;
+            }
+        }
+
+
+        void OnFinishedSpeechUtterance(object sender, AVSpeechSynthesizerUteranceEventArgs args) 
+        {
+            currentSpeak?.TrySetResult(null);
         }
 
 
