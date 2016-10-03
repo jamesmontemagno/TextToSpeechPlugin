@@ -39,6 +39,7 @@ namespace Plugin.TextToSpeech
             return this.initTcs.Task;
         }
 
+
         #region IOnInitListener implementation
         /// <summary>
         /// OnInit of TTS
@@ -68,22 +69,27 @@ namespace Plugin.TextToSpeech
         /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
         public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
         {
-            await this.semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
-            this.text = text;
-            this.language = crossLocale;
-            this.pitch = pitch == null ? 1.0f : pitch.Value;
-            this.speakRate = speakRate == null ? 1.0f : speakRate.Value;
+            try 
+            {               
+                await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
+                this.text = text;
+                this.language = crossLocale;
+                this.pitch = pitch == null ? 1.0f : pitch.Value;
+                this.speakRate = speakRate == null ? 1.0f : speakRate.Value;
 
-            // TODO: need to wait lock so not to break people using queuing mechanism
-            await this.Init();
-            await Speak(cancelToken);
+                // TODO: need to wait lock so not to break people using queuing mechanism
+                await this.Init();
+                await Speak(cancelToken);
+            }
+            finally 
+            {
+                semaphore.Release();
+            }
         }
 
 
         private void SetDefaultLanguage()
         {
-
-
             SetDefaultLanguageNonLollipop();
 
         }

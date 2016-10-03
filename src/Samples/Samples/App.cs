@@ -8,6 +8,7 @@ namespace Samples
     public class App : Application
     {
         CancellationTokenSource cancelSrc;
+        const string MSG = "This is a test of the emergency broadcast system.  Had this had been an actual emergency, I'm sure something else important would have happened";
 
 
         public App()
@@ -25,7 +26,8 @@ namespace Samples
                     if (cancelSrc == null)
                     {
                         cancelSrc = new CancellationTokenSource();
-                        await CrossTextToSpeech.Current.Speak("Hello. Testing Testing 1 2 3", cancelToken: cancelSrc.Token);
+                        await CrossTextToSpeech.Current.Speak(MSG, cancelToken: cancelSrc.Token);
+                        cancelSrc = null;
                     }
                     else
                     {
