@@ -49,15 +49,17 @@ namespace Plugin.TextToSpeech
       if (string.IsNullOrWhiteSpace(text))
         return;
 
-        await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
-      var localCode = string.Empty;
-
-      //nothing fancy needed here
-      if(pitch == null && speakRate == null && volume == null)
-      {
-        if(crossLocale.HasValue && !string.IsNullOrWhiteSpace(crossLocale.Value.Language))
+        try
         {
-          localCode = crossLocale.Value.Language;
+            await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
+            var localCode = string.Empty;
+
+            //nothing fancy needed here
+            if (pitch == null && speakRate == null && volume == null)
+            {
+                if (crossLocale.HasValue && !string.IsNullOrWhiteSpace(crossLocale.Value.Language))
+                {
+                    localCode = crossLocale.Value.Language;
 #if NETFX_CORE
           var voices = from voice in SpeechSynthesizer.AllVoices
                         where (voice.Language == localCode
@@ -66,21 +68,21 @@ namespace Plugin.TextToSpeech
           speechSynthesizer.Voice =(voices.Any() ? voices.ElementAt(0) : SpeechSynthesizer.DefaultVoice);
 
 #else
-          var voices = from voice in InstalledVoices.All
-                       where (voice.Language == localCode
-                         && voice.Gender.Equals(VoiceGender.Female))
-                         select voice;
-          speechSynthesizer.SetVoice(voices.Any() ? voices.ElementAt(0) : InstalledVoices.Default);
+                    var voices = from voice in InstalledVoices.All
+                        where (voice.Language == localCode
+                               && voice.Gender.Equals(VoiceGender.Female))
+                        select voice;
+                    speechSynthesizer.SetVoice(voices.Any() ? voices.ElementAt(0) : InstalledVoices.Default);
 #endif
-        }
-        else
-        {
+                }
+                else
+                {
 #if NETFX_CORE
           speechSynthesizer.Voice = SpeechSynthesizer.DefaultVoice;
 #else
-          speechSynthesizer.SetVoice(InstalledVoices.Default);
+                    speechSynthesizer.SetVoice(InstalledVoices.Default);
 #endif
-        }
+                }
 
 #if NETFX_CORE
         try
@@ -88,78 +90,81 @@ namespace Plugin.TextToSpeech
           var stream = await speechSynthesizer.SynthesizeTextToStreamAsync(text);
           element.SetSource(stream, stream.ContentType);
           element.Play();
+          cancelToken?.Register(() => element.Stop());
         }
         catch(Exception ex)
         {
           Debug.WriteLine("Unable to playback stream: " + ex);
         }
 #else
-        await speechSynthesizer.SpeakTextAsync(text);
+                cancelToken?.Register(() => speechSynthesizer.CancelAll());
+                await speechSynthesizer.SpeakTextAsync(text);
 #endif
-      }
+            }
 
-      if(crossLocale.HasValue && !string.IsNullOrWhiteSpace(crossLocale.Value.Language))
-      {
-         localCode = crossLocale.Value.Language;
+            if (crossLocale.HasValue && !string.IsNullOrWhiteSpace(crossLocale.Value.Language))
+            {
+                localCode = crossLocale.Value.Language;
 #if NETFX_CORE
         var voices = from voice in SpeechSynthesizer.AllVoices
                      where (voice.Language == localCode
                      && voice.Gender.Equals(VoiceGender.Female))
                      select voice;
 #else
-        var voices = from voice in InstalledVoices.All
-                     where (voice.Language == localCode
-                         && voice.Gender.Equals(VoiceGender.Female))
-                         select voice;
+                var voices = from voice in InstalledVoices.All
+                    where (voice.Language == localCode
+                           && voice.Gender.Equals(VoiceGender.Female))
+                    select voice;
 #endif
-        if (!voices.Any())
-        {
+                if (!voices.Any())
+                {
 #if NETFX_CORE
           localCode = SpeechSynthesizer.DefaultVoice.Language;
 #else
-          localCode = InstalledVoices.Default.Language;
+                    localCode = InstalledVoices.Default.Language;
 #endif
-        }
-      }
-      else
-      {
+                }
+            }
+            else
+            {
 #if NETFX_CORE
         localCode = SpeechSynthesizer.DefaultVoice.Language;
 #else
-        localCode = InstalledVoices.Default.Language;
+                localCode = InstalledVoices.Default.Language;
 #endif
-      }
+            }
 
 
-       if (!volume.HasValue)
-        volume = 100.0f;
-      else if (volume.Value > 1.0f)
-        volume = 100.0f;
-      else if (volume.Value < 0.0f)
-        volume = 0.0f;
-       else
-         volume = volume.Value * 100.0f;
+            if (!volume.HasValue)
+                volume = 100.0f;
+            else if (volume.Value > 1.0f)
+                volume = 100.0f;
+            else if (volume.Value < 0.0f)
+                volume = 0.0f;
+            else
+                volume = volume.Value*100.0f;
 
-      var pitchProsody = "default";
-      //var test = "x-low", "low", "medium", "high", "x-high", or "default";
-      if(!pitch.HasValue)
-        pitchProsody = "default";
-      else if(pitch.Value >=  1.6f)
-        pitchProsody = "x-high";
-      else if(pitch.Value >= 1.1f)
-        pitchProsody = "high";
-      else if(pitch.Value >= .9f)
-        pitchProsody = "medium";
-      else if(pitch.Value >= .4f)
-        pitchProsody = "low";
-      else
-        pitchProsody = "x-low";
+            var pitchProsody = "default";
+            //var test = "x-low", "low", "medium", "high", "x-high", or "default";
+            if (!pitch.HasValue)
+                pitchProsody = "default";
+            else if (pitch.Value >= 1.6f)
+                pitchProsody = "x-high";
+            else if (pitch.Value >= 1.1f)
+                pitchProsody = "high";
+            else if (pitch.Value >= .9f)
+                pitchProsody = "medium";
+            else if (pitch.Value >= .4f)
+                pitchProsody = "low";
+            else
+                pitchProsody = "x-low";
 
 
-      string ssmlText = "<speak version=\"1.0\" ";
-      ssmlText += "xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"" + localCode + "\">";
-      ssmlText += "<prosody pitch=\""+pitchProsody+"\" volume=\""+volume.Value +"\" rate=\""+ speakRate.Value+"\" >" + text + "</prosody>";
-      ssmlText += "</speak>";
+            string ssmlText = "<speak version=\"1.0\" ";
+            ssmlText += "xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"" + localCode + "\">";
+            ssmlText += "<prosody pitch=\"" + pitchProsody + "\" volume=\"" + volume.Value + "\" rate=\"" +
+                        speakRate.Value + "\" >" + text + "</prosody>";
+            ssmlText += "</speak>";
 
 #if NETFX_CORE
       try{
@@ -172,9 +177,14 @@ namespace Plugin.TextToSpeech
         Debug.WriteLine("Unable to playback stream: " + ex);
       }
 #else
-      speechSynthesizer.SpeakSsmlAsync(ssmlText);
+            cancelToken?.Register(() => speechSynthesizer.CancelAll());
+            await speechSynthesizer.SpeakSsmlAsync(ssmlText);
 #endif
-
+        }
+        finally
+        {
+            semaphore.Release();
+        }
     }
 
     /// <summary>
