@@ -19,15 +19,28 @@ namespace Samples
             var queueBtn = new Button { Text = "Test Queue" };
             var lbl = new Label { TextColor = Color.Red };
 
-            queueBtn.Command = new Command(async () => 
+            queueBtn.Command = new Command(async () =>
             {
-                await Task.WhenAll(
-                    CrossTextToSpeech.Current.Speak("Queue 1"),
-                    CrossTextToSpeech.Current.Speak("Queue 2"),
-                    CrossTextToSpeech.Current.Speak("Queue 3"),
-                    CrossTextToSpeech.Current.Speak("Queue 4"),
-                    CrossTextToSpeech.Current.Speak("Queue 5")
-                );
+                queueBtn.IsEnabled = false;
+                try
+                {
+
+                    await Task.WhenAll(
+                        CrossTextToSpeech.Current.Speak("Queue 1"),
+                        CrossTextToSpeech.Current.Speak("Queue 2"),
+                        CrossTextToSpeech.Current.Speak("Queue 3"),
+                        CrossTextToSpeech.Current.Speak("Queue 4"),
+                        CrossTextToSpeech.Current.Speak("Queue 5")
+                    );
+                }
+                catch (Exception ex)
+                {
+                    lbl.Text = ex.ToString();
+                }
+                finally
+                {
+                    queueBtn.IsEnabled = true;
+                }
             });
             btn.Command = new Command(async () =>
             {
@@ -55,6 +68,7 @@ namespace Samples
                 finally
                 {
                     btn.Text = "Say Hello";
+                    cancelSrc = null;
                 }
             });
 

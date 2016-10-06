@@ -163,7 +163,7 @@ namespace Plugin.TextToSpeech
             string ssmlText = "<speak version=\"1.0\" ";
             ssmlText += "xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"" + localCode + "\">";
             ssmlText += "<prosody pitch=\"" + pitchProsody + "\" volume=\"" + volume.Value + "\" rate=\"" +
-                        speakRate.Value + "\" >" + text + "</prosody>";
+                        speakRate ?? 1F + "\" >" + text + "</prosody>";
             ssmlText += "</speak>";
 
 #if NETFX_CORE
@@ -171,6 +171,7 @@ namespace Plugin.TextToSpeech
       var stream = await speechSynthesizer.SynthesizeSsmlToStreamAsync(ssmlText);
       element.SetSource(stream, stream.ContentType);
       element.Play();
+          cancelToken?.Register(() => element.Stop());
       }
       catch(Exception ex)
       {
