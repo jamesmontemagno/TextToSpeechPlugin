@@ -71,12 +71,6 @@
         <file src="src\TextToSpeech.Plugin.Android\bin\Release\Plugin.TextToSpeech.xml" target="lib\MonoAndroid10\Plugin.TextToSpeech.xml" />
         <file src="src\TextToSpeech.Plugin.Android\bin\Release\Plugin.TextToSpeech.pdb" target="lib\MonoAndroid10\Plugin.TextToSpeech.pdb" />
 
-        <!--Xamarin.iOS-->
-        <file src="src\TextToSpeech.Plugin.Abstractions\bin\Release\Plugin.TextToSpeech.Abstractions.dll" target="lib\MonoTouch10\Plugin.TextToSpeech.Abstractions.dll" />
-        <file src="src\TextToSpeech.Plugin.Abstractions\bin\Release\Plugin.TextToSpeech.Abstractions.xml" target="lib\MonoTouch10\Plugin.TextToSpeech.Abstractions.xml" />
-        <file src="src\TextToSpeech.Plugin.iOS\bin\iPhone\Release\Plugin.TextToSpeech.dll" target="lib\MonoTouch10\Plugin.TextToSpeech.dll" />
-        <file src="src\TextToSpeech.Plugin.iOS\bin\iPhone\Release\Plugin.TextToSpeech.xml" target="lib\MonoTouch10\Plugin.TextToSpeech.xml" />
-
         <!--Xamarin.iOS Unified-->
         <file src="src\TextToSpeech.Plugin.Abstractions\bin\Release\Plugin.TextToSpeech.Abstractions.dll" target="lib\Xamarin.iOS10\Plugin.TextToSpeech.Abstractions.dll" />
         <file src="src\TextToSpeech.Plugin.Abstractions\bin\Release\Plugin.TextToSpeech.Abstractions.xml" target="lib\Xamarin.iOS10\Plugin.TextToSpeech.Abstractions.xml" />
