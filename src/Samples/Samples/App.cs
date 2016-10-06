@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Plugin.TextToSpeech;
 using Xamarin.Forms;
 
@@ -15,8 +16,19 @@ namespace Samples
         {
             // The root page of your application
             var btn = new Button {Text = "Say Hello" };
+            var queueBtn = new Button { Text = "Test Queue" };
             var lbl = new Label { TextColor = Color.Red };
 
+            queueBtn.Command = new Command(async () => 
+            {
+                await Task.WhenAll(
+                    CrossTextToSpeech.Current.Speak("Queue 1"),
+                    CrossTextToSpeech.Current.Speak("Queue 2"),
+                    CrossTextToSpeech.Current.Speak("Queue 3"),
+                    CrossTextToSpeech.Current.Speak("Queue 4"),
+                    CrossTextToSpeech.Current.Speak("Queue 5")
+                );
+            });
             btn.Command = new Command(async () =>
             {
                 lbl.Text = String.Empty;
@@ -46,6 +58,8 @@ namespace Samples
                 }
             });
 
+
+
             var content = new ContentPage
             {
                 Title = "Samples",
@@ -54,6 +68,7 @@ namespace Samples
                     VerticalOptions = LayoutOptions.Center,
                     Children = {
                         btn,
+                        queueBtn,
                         lbl
                     }
                 }
