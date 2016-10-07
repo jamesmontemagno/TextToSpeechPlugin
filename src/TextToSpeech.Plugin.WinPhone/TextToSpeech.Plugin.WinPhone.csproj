@@ -88,6 +88,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\TextToSpeech.Plugin.UWP\ReadProgressStream.cs">
+      <Link>ReadProgressStream.cs</Link>
+    </Compile>
     <Compile Include="..\TextToSpeech.Plugin\CrossTextToSpeech.cs">
       <Link>CrossTextToSpeech.cs</Link>
     </Compile>

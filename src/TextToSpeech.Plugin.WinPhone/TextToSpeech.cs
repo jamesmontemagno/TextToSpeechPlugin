@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 #if NETFX_CORE
 using Windows.Media.SpeechSynthesis;
 using Windows.UI.Xaml.Controls;
@@ -61,11 +62,11 @@ namespace Plugin.TextToSpeech
                 {
                     localCode = crossLocale.Value.Language;
 #if NETFX_CORE
-          var voices = from voice in SpeechSynthesizer.AllVoices
+                    var voices = from voice in SpeechSynthesizer.AllVoices
                         where (voice.Language == localCode
-                        && voice.Gender.Equals(VoiceGender.Female))
+                               && voice.Gender.Equals(VoiceGender.Female))
                         select voice;
-          speechSynthesizer.Voice =(voices.Any() ? voices.ElementAt(0) : SpeechSynthesizer.DefaultVoice);
+                    speechSynthesizer.Voice = (voices.Any() ? voices.ElementAt(0) : SpeechSynthesizer.DefaultVoice);
 
 #else
                     var voices = from voice in InstalledVoices.All
@@ -78,24 +79,34 @@ namespace Plugin.TextToSpeech
                 else
                 {
 #if NETFX_CORE
-          speechSynthesizer.Voice = SpeechSynthesizer.DefaultVoice;
+                    speechSynthesizer.Voice = SpeechSynthesizer.DefaultVoice;
 #else
                     speechSynthesizer.SetVoice(InstalledVoices.Default);
 #endif
                 }
 
 #if NETFX_CORE
-        try
-        {
-          var stream = await speechSynthesizer.SynthesizeTextToStreamAsync(text);
-          element.SetSource(stream, stream.ContentType);
-          element.Play();
-          cancelToken?.Register(() => element.Stop());
-        }
-        catch(Exception ex)
-        {
-          Debug.WriteLine("Unable to playback stream: " + ex);
-        }
+                try
+                {
+                    var tcs = new TaskCompletionSource<object>();
+                    var speechStream = await speechSynthesizer.SynthesizeTextToStreamAsync(text);
+                    var stream = new ReadProgressStream(speechStream);
+                    stream.EndOfStream += (sender, args) => tcs.TrySetResult(null); // I have to wait until after it reads the last of the stream
+                    element.SetSource(stream, speechStream.ContentType);
+                    element.Play();
+
+                    cancelToken?.Register(() =>
+                    {
+                        element.Stop();
+                        tcs.TrySetResult(null);
+                    });
+
+                    await tcs.Task;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Unable to playback stream: " + ex);
+                }
 #else
                 cancelToken?.Register(() => speechSynthesizer.CancelAll());
                 await speechSynthesizer.SpeakTextAsync(text);
@@ -106,10 +117,10 @@ namespace Plugin.TextToSpeech
             {
                 localCode = crossLocale.Value.Language;
 #if NETFX_CORE
-        var voices = from voice in SpeechSynthesizer.AllVoices
-                     where (voice.Language == localCode
-                     && voice.Gender.Equals(VoiceGender.Female))
-                     select voice;
+                var voices = from voice in SpeechSynthesizer.AllVoices
+                    where (voice.Language == localCode
+                           && voice.Gender.Equals(VoiceGender.Female))
+                    select voice;
 #else
                 var voices = from voice in InstalledVoices.All
                     where (voice.Language == localCode
@@ -119,7 +130,7 @@ namespace Plugin.TextToSpeech
                 if (!voices.Any())
                 {
 #if NETFX_CORE
-          localCode = SpeechSynthesizer.DefaultVoice.Language;
+                    localCode = SpeechSynthesizer.DefaultVoice.Language;
 #else
                     localCode = InstalledVoices.Default.Language;
 #endif
@@ -128,7 +139,7 @@ namespace Plugin.TextToSpeech
             else
             {
 #if NETFX_CORE
-        localCode = SpeechSynthesizer.DefaultVoice.Language;
+                localCode = SpeechSynthesizer.DefaultVoice.Language;
 #else
                 localCode = InstalledVoices.Default.Language;
 #endif
@@ -167,16 +178,26 @@ namespace Plugin.TextToSpeech
             ssmlText += "</speak>";
 
 #if NETFX_CORE
-      try{
-      var stream = await speechSynthesizer.SynthesizeSsmlToStreamAsync(ssmlText);
-      element.SetSource(stream, stream.ContentType);
-      element.Play();
-          cancelToken?.Register(() => element.Stop());
-      }
-      catch(Exception ex)
-      {
-        Debug.WriteLine("Unable to playback stream: " + ex);
-      }
+            try
+            {
+                var tcs = new TaskCompletionSource<object>();
+                var speechStream = await speechSynthesizer.SynthesizeSsmlToStreamAsync(ssmlText);
+                var stream = new ReadProgressStream(speechStream);
+                stream.EndOfStream += (sender, args) => tcs.TrySetResult(null);
+
+                element.SetSource(stream, speechStream.ContentType);
+                element.Play();
+                cancelToken?.Register(() =>
+                {
+                    element.Stop();
+                    tcs.TrySetResult(null);
+                });
+                await tcs.Task;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Unable to playback stream: " + ex);
+            }
 #else
             cancelToken?.Register(() => speechSynthesizer.CancelAll());
             await speechSynthesizer.SpeakSsmlAsync(ssmlText);

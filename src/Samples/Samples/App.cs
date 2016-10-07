@@ -60,7 +60,10 @@ namespace Samples
                         cancelSrc = null;
                     }
                 }
-                catch (OperationCanceledException) {}
+                catch (OperationCanceledException)
+                {
+                    lbl.Text = "You cancelled it";
+                }
                 catch (Exception ex)
                 {
                     lbl.Text = ex.ToString();

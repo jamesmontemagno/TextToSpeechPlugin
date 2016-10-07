@@ -116,6 +116,7 @@
       <Link>CrossTextToSpeech.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadProgressStream.cs" />
     <Content Include="Properties\Plugin.TextToSpeech.rd.xml" />
   </ItemGroup>
   <ItemGroup>
