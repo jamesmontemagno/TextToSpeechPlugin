@@ -9,7 +9,8 @@ using Plugin.TextToSpeech.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Plugin.TextToSpeech
 {
@@ -18,43 +19,37 @@ namespace Plugin.TextToSpeech
     /// </summary>
     public class TextToSpeech : ITextToSpeech, IDisposable
     {
-        AVSpeechSynthesizer speechSynthesizer;
+        readonly AVSpeechSynthesizer speechSynthesizer;
+        readonly SemaphoreSlim semaphore;
+
+
         /// <summary>
         /// Default contstructor. Creates new AVSpeechSynthesizer
         /// </summary>
         public TextToSpeech()
         {
+            speechSynthesizer = new AVSpeechSynthesizer();
+            semaphore = new SemaphoreSlim(1, 1);
         }
 
-        /// <summary>
-        /// Initialize TTS
-        /// </summary>
-        public void Init()
-        {
-            speechSynthesizer = new AVSpeechSynthesizer();
-        }
 
         /// <summary>
         /// Speak back text
         /// </summary>
         /// <param name="text">Text to speak</param>
-        /// <param name="queue">If you want to chain together speak command or cancel current</param>
         /// <param name="crossLocale">Locale of voice</param>
         /// <param name="pitch">Pitch of voice</param>
         /// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
         /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
-        public void Speak(string text, bool queue = false, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null)
+        public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
         {
             if (string.IsNullOrWhiteSpace(text))
                 return;
 
-            if (speechSynthesizer == null)
-                Init();
-
+            await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
             var speechUtterance = GetSpeechUtterance(text, crossLocale, pitch, speakRate, volume);
-
-            SpeakUtterance(queue, speechUtterance);
-        }        
+            await SpeakUtterance(speechUtterance, cancelToken);
+        }
 
         /// <summary>
         /// Get all installed and valid languages
@@ -70,13 +65,13 @@ namespace Plugin.TextToSpeech
         private AVSpeechUtterance GetSpeechUtterance(string text, CrossLocale? crossLocale, float? pitch, float? speakRate, float? volume)
         {
             AVSpeechUtterance speechUtterance;
-            
+
             var voice = GetVoiceForLocaleLanguage(crossLocale);
-            
+
             if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
             {
                 speechUtterance = new AVSpeechUtterance(" ");
-                speechUtterance.Voice = voice;                
+                speechUtterance.Voice = voice;
             }
             else
             {
@@ -91,7 +86,7 @@ namespace Plugin.TextToSpeech
                     Volume = volume.Value,
                     PitchMultiplier = pitch.Value
                 };
-            }            
+            }
 
             return speechUtterance;
         }
@@ -121,7 +116,7 @@ namespace Plugin.TextToSpeech
             else if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0)) //use .125f
                 divid = 8.0f;
             else
-                divid = 4.0f; //use .25f  
+                divid = 4.0f; //use .25f
 
             if (!speakRate.HasValue)
                 speakRate = AVSpeechUtterance.MaximumSpeechRate / divid; //normal speech, default is fast
@@ -150,12 +145,30 @@ namespace Plugin.TextToSpeech
             return pitch.GetValueOrDefault(1.0f);
         }
 
-        private void SpeakUtterance(bool queue, AVSpeechUtterance speechUtterance)
-        {
-            if (!queue && speechSynthesizer.Speaking)
-                speechSynthesizer.StopSpeaking(AVSpeechBoundary.Word);
 
+        TaskCompletionSource<object> currentSpeak;
+        async Task SpeakUtterance(AVSpeechUtterance speechUtterance, CancellationToken? cancelToken)
+        {
+            if (speechSynthesizer.Speaking)
+            {
+                TryCancel();
+            }
+
+            currentSpeak = new TaskCompletionSource<object>();
+            cancelToken?.Register(() => TryCancel());
             speechSynthesizer.SpeakUtterance(speechUtterance);
+            var handler = new EventHandler<AVSpeechSynthesizerUteranceEventArgs>((sender, args) => currentSpeak.TrySetResult(null));
+            speechSynthesizer.DidFinishSpeechUtterance += handler;
+
+            await currentSpeak.Task;
+            speechSynthesizer.DidFinishSpeechUtterance -= handler;
+        }
+
+
+        void TryCancel()
+        {
+            speechSynthesizer.StopSpeaking(AVSpeechBoundary.Word);
+            currentSpeak?.TrySetCanceled();
         }
 
         /// <summary>
@@ -163,11 +176,7 @@ namespace Plugin.TextToSpeech
         /// </summary>
         public void Dispose()
         {
-            if (speechSynthesizer != null)
-            {
-                speechSynthesizer.Dispose();
-                speechSynthesizer = null;
-            }
+            speechSynthesizer?.Dispose();
         }
     }
 }

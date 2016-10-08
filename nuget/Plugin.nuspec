@@ -14,6 +14,9 @@
             Cross platform Text-to-Speech for Xamarin and Windows.
         </summary>
         <releaseNotes>
+            [3.0.0]
+            -Breaking changes: async Speak method to know when an utterance has finished
+
             [2.0.0]
             -Breaking changes: new namespace - Plugin.TextToSpeech
             -Add UWP Support
@@ -79,7 +82,7 @@
         <file src="src\TextToSpeech.Plugin.Abstractions\bin\Release\Plugin.TextToSpeech.Abstractions.xml" target="lib\Xamarin.iOS10\Plugin.TextToSpeech.Abstractions.xml" />
         <file src="src\TextToSpeech.Plugin.iOSUnified\bin\iPhone\Release\Plugin.TextToSpeech.dll" target="lib\Xamarin.iOS10\Plugin.TextToSpeech.dll" />
         <file src="src\TextToSpeech.Plugin.iOSUnified\bin\iPhone\Release\Plugin.TextToSpeech.xml" target="lib\Xamarin.iOS10\Plugin.TextToSpeech.xml" />
-        
+
         <!--UWP-->
         <file src="src\TextToSpeech.Plugin.Abstractions\bin\Release\Plugin.TextToSpeech.Abstractions.dll" target="lib\UAP10\Plugin.TextToSpeech.Abstractions.dll" />
         <file src="src\TextToSpeech.Plugin.Abstractions\bin\Release\Plugin.TextToSpeech.Abstractions.xml" target="lib\UAP10\Plugin.TextToSpeech.Abstractions.xml" />
