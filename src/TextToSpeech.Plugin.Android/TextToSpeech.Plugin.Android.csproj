@@ -61,7 +61,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
       <Project>{6d8696fc-961b-4321-8294-4ad3cbb05615}</Project>
-      <Name>Refractored.Xam.TTS.Abstractions</Name>
+      <Name>TextToSpeech.Plugin.Abstractions</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

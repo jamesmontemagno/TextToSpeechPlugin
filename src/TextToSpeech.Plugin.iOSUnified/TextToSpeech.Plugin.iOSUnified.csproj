@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{CC4CA81F-6B30-4A3A-AE87-005350A885FB}</ProjectGuid>
@@ -36,13 +36,11 @@
     <DocumentationFile>bin\iPhone\Release\Plugin.TextToSpeech.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\TextToSpeech.Plugin.iOS\TextToSpeech.cs">
-      <Link>TextToSpeech.cs</Link>
-    </Compile>
     <Compile Include="..\TextToSpeech.Plugin\CrossTextToSpeech.cs">
       <Link>CrossTextToSpeech.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextToSpeech.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
