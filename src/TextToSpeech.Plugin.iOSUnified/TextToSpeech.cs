@@ -1,4 +1,4 @@
-﻿#if __UNIFIED__
+#if __UNIFIED__
 using AVFoundation;
 using UIKit;
 #else
@@ -33,22 +33,30 @@ namespace Plugin.TextToSpeech
         }
 
 
-        /// <summary>
-        /// Speak back text
-        /// </summary>
-        /// <param name="text">Text to speak</param>
-        /// <param name="crossLocale">Locale of voice</param>
-        /// <param name="pitch">Pitch of voice</param>
-        /// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
-        /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
-        public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
+		/// <summary>
+		/// Speak back text
+		/// </summary>
+		/// <param name="text">Text to speak</param>
+		/// <param name="crossLocale">Locale of voice</param>
+		/// <param name="pitch">Pitch of voice</param>
+		/// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
+		/// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
+		/// <param name="cancelToken">Canelation token to stop speak</param> 
+		public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
         {
             if (string.IsNullOrWhiteSpace(text))
                 return;
 
-            await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
-            var speechUtterance = GetSpeechUtterance(text, crossLocale, pitch, speakRate, volume);
-            await SpeakUtterance(speechUtterance, cancelToken);
+            try 
+            {                
+                await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
+                var speechUtterance = GetSpeechUtterance(text, crossLocale, pitch, speakRate, volume);
+                await SpeakUtterance(speechUtterance, cancelToken);
+            }
+            finally 
+            {
+                semaphore.Release();
+            }
         }
 
         /// <summary>
@@ -70,7 +78,8 @@ namespace Plugin.TextToSpeech
 
             if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
             {
-                speechUtterance = new AVSpeechUtterance(" ");
+                //speechUtterance = new AVSpeechUtterance(" ");
+                speechUtterance = new AVSpeechUtterance(text);
                 speechUtterance.Voice = voice;
             }
             else
@@ -149,19 +158,26 @@ namespace Plugin.TextToSpeech
         TaskCompletionSource<object> currentSpeak;
         async Task SpeakUtterance(AVSpeechUtterance speechUtterance, CancellationToken? cancelToken)
         {
-            if (speechSynthesizer.Speaking)
+            try 
             {
-                TryCancel();
+                currentSpeak = new TaskCompletionSource<object>();
+                cancelToken?.Register(() => TryCancel());
+
+                speechSynthesizer.DidFinishSpeechUtterance += this.OnFinishedSpeechUtterance;
+                speechSynthesizer.SpeakUtterance(speechUtterance);
+
+                await currentSpeak.Task;
             }
+            finally 
+            {
+                speechSynthesizer.DidFinishSpeechUtterance -= this.OnFinishedSpeechUtterance;
+            }
+        }
 
-            currentSpeak = new TaskCompletionSource<object>();
-            cancelToken?.Register(() => TryCancel());
-            speechSynthesizer.SpeakUtterance(speechUtterance);
-            var handler = new EventHandler<AVSpeechSynthesizerUteranceEventArgs>((sender, args) => currentSpeak.TrySetResult(null));
-            speechSynthesizer.DidFinishSpeechUtterance += handler;
 
-            await currentSpeak.Task;
-            speechSynthesizer.DidFinishSpeechUtterance -= handler;
+        void OnFinishedSpeechUtterance(object sender, AVSpeechSynthesizerUteranceEventArgs args) 
+        {
+            currentSpeak?.TrySetResult(null);
         }
 
 

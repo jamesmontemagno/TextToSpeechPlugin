@@ -31,7 +31,6 @@ Build status: [![Build status](https://ci.appveyor.com/api/projects/status/ucwvi
 * Volume
 * Speak Rate
 * Locale/Language of Speech
-* Decide to queue speech block
 * Gather all available languages to speak in
 
 ### Usage
@@ -51,7 +50,8 @@ await CrossTextToSpeech.Current.Speak("Text to speak");
 /// <param name="pitch">Pitch of voice (All 0.0 - 2.0f)</param>
 /// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
 /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
-public async Task Speak(string text, CrossLocale crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null)
+/// <param name="cancelToken">Cancel the current speech</param>
+public async Task Speak(string text, CrossLocale crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
 ```  
 
 **CrossLocale**
