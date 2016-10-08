@@ -1,13 +1,13 @@
 ﻿using Plugin.TextToSpeech.Abstractions;
 using System;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
+using Windows.ApplicationModel.Core;
+using Windows.Foundation;
+using Windows.Media.Playback;
 #if NETFX_CORE
 using Windows.Media.SpeechSynthesis;
-using Windows.UI.Xaml.Controls;
 using System.Diagnostics;
 #else
 using Windows.Phone.Speech.Synthesis;
@@ -21,19 +21,15 @@ namespace Plugin.TextToSpeech
   public class TextToSpeech : ITextToSpeech, IDisposable
   {
       readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
-    SpeechSynthesizer speechSynthesizer;
-#if NETFX_CORE
-    MediaElement element;
-#endif
+        SpeechSynthesizer speechSynthesizer;
+
+
     /// <summary>
     /// SpeechSynthesizer
     /// </summary>
     public TextToSpeech()
     {
         speechSynthesizer = new SpeechSynthesizer();
-#if NETFX_CORE
-        element = new MediaElement();
-#endif
     }
 
     /// <summary>
@@ -86,27 +82,30 @@ namespace Plugin.TextToSpeech
                 }
 
 #if NETFX_CORE
-                try
-                {
-                    var tcs = new TaskCompletionSource<object>();
-                    var speechStream = await speechSynthesizer.SynthesizeTextToStreamAsync(text);
-                    var stream = new ReadProgressStream(speechStream);
-                    stream.EndOfStream += (sender, args) => tcs.TrySetResult(null); // I have to wait until after it reads the last of the stream
-                    element.SetSource(stream, speechStream.ContentType);
-                    element.Play();
+                //var tcs = new TaskCompletionSource<object>();
+                //var handler = new TypedEventHandler<MediaPlayer, object>((sender, args) => tcs.TrySetResult(null));
 
-                    cancelToken?.Register(() =>
-                    {
-                        element.Stop();
-                        tcs.TrySetResult(null);
-                    });
+                //try
+                //{
+                //    var player = BackgroundMediaPlayer.Current;
+                //    var stream = await speechSynthesizer.SynthesizeTextToStreamAsync(text);
+                //    player.MediaEnded += handler;
+                //    player.SetStreamSource(stream);
+                //    player.Play();
 
-                    await tcs.Task;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("Unable to playback stream: " + ex);
-                }
+                //    cancelToken?.Register(() =>
+                //    {
+                //        player.PlaybackRate = 0;
+                //        tcs.TrySetResult(null);
+                //    });
+
+                //    await tcs.Task;
+                //    player.MediaEnded -= handler;
+                //}
+                //catch (Exception ex)
+                //{
+                //    Debug.WriteLine("Unable to playback stream: " + ex);
+                //}
 #else
                 cancelToken?.Register(() => speechSynthesizer.CancelAll());
                 await speechSynthesizer.SpeakTextAsync(text);
@@ -178,21 +177,26 @@ namespace Plugin.TextToSpeech
             ssmlText += "</speak>";
 
 #if NETFX_CORE
+            var tcs1 = new TaskCompletionSource<object>();
+            var handler1 = new TypedEventHandler<MediaPlayer, object>((sender, args) => tcs1.TrySetResult(null));
+
             try
             {
-                var tcs = new TaskCompletionSource<object>();
-                var speechStream = await speechSynthesizer.SynthesizeSsmlToStreamAsync(ssmlText);
-                var stream = new ReadProgressStream(speechStream);
-                stream.EndOfStream += (sender, args) => tcs.TrySetResult(null);
+                    var player = BackgroundMediaPlayer.Current;
+                var stream = await speechSynthesizer.SynthesizeTextToStreamAsync(text);
 
-                element.SetSource(stream, speechStream.ContentType);
-                element.Play();
+                player.MediaEnded += handler1;
+                player.SetStreamSource(stream);
+                player.Play();
+
                 cancelToken?.Register(() =>
                 {
-                    element.Stop();
-                    tcs.TrySetResult(null);
+                    player.PlaybackRate = 0;
+                    tcs1.TrySetResult(null);
                 });
-                await tcs.Task;
+
+                await tcs1.Task;
+                player.MediaEnded -= handler1;
             }
             catch (Exception ex)
             {
@@ -240,13 +244,6 @@ namespace Plugin.TextToSpeech
         speechSynthesizer.Dispose();
         speechSynthesizer = null;
       }
-
-#if NETFX_CORE
-      if(element != null)
-      {
-        element = null;
-      }
-#endif
     }
   }
 }

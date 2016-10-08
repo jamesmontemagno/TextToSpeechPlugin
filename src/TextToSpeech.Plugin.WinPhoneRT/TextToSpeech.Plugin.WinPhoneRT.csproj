@@ -87,9 +87,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\TextToSpeech.Plugin.UWP\ReadProgressStream.cs">
-      <Link>ReadProgressStream.cs</Link>
-    </Compile>
     <Compile Include="..\TextToSpeech.Plugin.WinPhone\TextToSpeech.cs">
       <Link>TextToSpeech.cs</Link>
     </Compile>
