@@ -16,7 +16,7 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
     <DevInstrumentationEnabled>True</DevInstrumentationEnabled>
-    <TargetFrameworkVersion>v7.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <NuGetPackageImportStamp>89ba19bf</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
