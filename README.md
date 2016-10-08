@@ -7,9 +7,11 @@ Preview: http://screencast.com/t/voW1P48Ka
 
 ### Setup
 * Available on NuGet: https://www.nuget.org/packages/Xam.Plugins.TextToSpeech/ [![NuGet](https://img.shields.io/nuget/v/Xam.Plugins.TextToSpeech.svg?label=NuGet)](https://www.nuget.org/packages/Xam.Plugins.TextToSpeech/)
-* Install into your PCL project and Client projects.
+* **Install into your PCL project and Client projects**.
 
-Build status: [![Build status](https://ci.appveyor.com/api/projects/status/ucwvippb5awrsqmg?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/texttospeechplugin)
+Build status: 
+* [![Build status](https://ci.appveyor.com/api/projects/status/ucwvippb5awrsqmg?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/texttospeechplugin)
+* CI NuGet Feed: https://ci.appveyor.com/nuget/texttospeechplugin
 
 **Platform Support**
 
