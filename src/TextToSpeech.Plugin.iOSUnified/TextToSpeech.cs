@@ -1,4 +1,4 @@
-﻿#if __UNIFIED__
+#if __UNIFIED__
 using AVFoundation;
 using UIKit;
 #else

@@ -23,7 +23,6 @@ namespace Plugin.TextToSpeech
       readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
         SpeechSynthesizer speechSynthesizer;
 
-
     /// <summary>
     /// SpeechSynthesizer
     /// </summary>
@@ -112,6 +111,7 @@ namespace Plugin.TextToSpeech
 #endif
             }
 
+
             if (crossLocale.HasValue && !string.IsNullOrWhiteSpace(crossLocale.Value.Language))
             {
                 localCode = crossLocale.Value.Language;
@@ -125,6 +125,7 @@ namespace Plugin.TextToSpeech
                     where (voice.Language == localCode
                            && voice.Gender.Equals(VoiceGender.Female))
                     select voice;
+
 #endif
                 if (!voices.Any())
                 {
@@ -211,6 +212,7 @@ namespace Plugin.TextToSpeech
         {
             semaphore.Release();
         }
+
     }
 
     /// <summary>
