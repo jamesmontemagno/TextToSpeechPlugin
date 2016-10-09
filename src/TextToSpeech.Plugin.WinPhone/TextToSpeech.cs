@@ -5,19 +5,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-#if WINDOWS_APP
-using Windows.UI.Xaml.Controls;
-#endif
-
 #if NETFX_CORE
 using Windows.Media.SpeechSynthesis;
 using System.Diagnostics;
+using Windows.Media.Playback;
 #else
 using Windows.Phone.Speech.Synthesis;
-#endif
-
-#if !WINDOWS_APP && NETFX_CORE
-using Windows.Media.Playback;
 #endif
 
 namespace Plugin.TextToSpeech
@@ -30,9 +23,6 @@ namespace Plugin.TextToSpeech
         readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
         SpeechSynthesizer speechSynthesizer;
 
-#if WINDOWS_APP
-        MediaElement element;
-#endif
 
         /// <summary>
         /// SpeechSynthesizer
@@ -40,9 +30,6 @@ namespace Plugin.TextToSpeech
         public TextToSpeech()
         {
             speechSynthesizer = new SpeechSynthesizer();
-#if WINDOWS_APP
-            element = new MediaElement();
-#endif
         }
 
         /// <summary>
@@ -53,10 +40,9 @@ namespace Plugin.TextToSpeech
         /// <param name="pitch">Pitch of voice</param>
         /// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
         /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
-        /// <param name="cancelToken">Canelation token to stop speak</param> 
+        /// <param name="cancelToken">Canelation token to stop speak</param>
         public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
         {
-            // TODO: sync lock this to prevent multiple calls coming in
             if (string.IsNullOrWhiteSpace(text))
                 return;
 
@@ -94,36 +80,6 @@ namespace Plugin.TextToSpeech
                         speechSynthesizer.SetVoice(InstalledVoices.Default);
 #endif
                     }
-
-#if NETFX_CORE
-                    //var tcs = new TaskCompletionSource<object>();
-                    //var handler = new TypedEventHandler<MediaPlayer, object>((sender, args) => tcs.TrySetResult(null));
-
-                    //try
-                    //{
-                    //    var player = BackgroundMediaPlayer.Current;
-                    //    var stream = await speechSynthesizer.SynthesizeTextToStreamAsync(text);
-                    //    player.MediaEnded += handler;
-                    //    player.SetStreamSource(stream);
-                    //    player.Play();
-
-                    //    cancelToken?.Register(() =>
-                    //    {
-                    //        player.PlaybackRate = 0;
-                    //        tcs.TrySetResult(null);
-                    //    });
-
-                    //    await tcs.Task;
-                    //    player.MediaEnded -= handler;
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    Debug.WriteLine("Unable to playback stream: " + ex);
-                    //}
-#else
-                    cancelToken?.Register(() => speechSynthesizer.CancelAll());
-                    await speechSynthesizer.SpeakTextAsync(text);
-#endif
                 }
 
 
@@ -192,60 +148,36 @@ namespace Plugin.TextToSpeech
                             speakRate ?? 1F + "\" >" + text + "</prosody>";
                 ssmlText += "</speak>";
 
-#if NETFX_CORE && !WINDOWS_APP
-                var tcs1 = new TaskCompletionSource<object>();
-                var handler1 = new TypedEventHandler<MediaPlayer, object>((sender, args) => tcs1.TrySetResult(null));
+#if NETFX_CORE
+                var tcs = new TaskCompletionSource<object>();
+                var handler = new TypedEventHandler<MediaPlayer, object>((sender, args) => tcs.TrySetResult(null));
 
                 try
                 {
                     var player = BackgroundMediaPlayer.Current;
                     var stream = await speechSynthesizer.SynthesizeTextToStreamAsync(text);
 
-                    player.MediaEnded += handler1;
+                    player.MediaEnded += handler;
                     player.SetStreamSource(stream);
                     player.Play();
 
                     cancelToken?.Register(() =>
                     {
                         player.PlaybackRate = 0;
-                        tcs1.TrySetResult(null);
+                        tcs.TrySetResult(null);
                     });
 
-                    await tcs1.Task;
-                    player.MediaEnded -= handler1;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("Unable to playback stream: " + ex);
-                }
-#elif WINDOWS_APP
-                var tcs1 = new TaskCompletionSource<object>();
-                var handler1 = new Windows.UI.Xaml.RoutedEventHandler((sender, args) => { tcs1.TrySetResult(null); });
-
-                try
-                {
-
-                    var stream = await speechSynthesizer.SynthesizeSsmlToStreamAsync(ssmlText);
-                    
-                    element.MediaEnded += handler1;
-                    element.SetSource(stream, stream.ContentType);
-                    element.Play();
-
-                    cancelToken?.Register(() =>
-                    {
-                        element.PlaybackRate = 0;
-                        tcs1.TrySetResult(null);
-                    });
-
-                    await tcs1.Task;
-                    element.MediaEnded -= handler1;
-
+                    await tcs.Task;
+                    player.MediaEnded -= handler;
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine("Unable to playback stream: " + ex);
                 }
 #else
+                //cancelToken?.Register(() => speechSynthesizer.CancelAll());
+                //await speechSynthesizer.SpeakTextAsync(text);
+
                 cancelToken?.Register(() => speechSynthesizer.CancelAll());
                 await speechSynthesizer.SpeakSsmlAsync(ssmlText);
 #endif
@@ -284,14 +216,6 @@ namespace Plugin.TextToSpeech
         public void Dispose()
         {
             speechSynthesizer?.Dispose();
-
-#if WINDOWS_APP
-            if (element != null)
-            {
-                element = null;
-            }
-#endif
-           
         }
     }
 }
