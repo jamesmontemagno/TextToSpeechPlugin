@@ -1,10 +1,5 @@
-#if __UNIFIED__
 using AVFoundation;
 using UIKit;
-#else
-using MonoTouch.AVFoundation;
-using MonoTouch.UIKit;
-#endif
 using Plugin.TextToSpeech.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -41,19 +36,19 @@ namespace Plugin.TextToSpeech
 		/// <param name="pitch">Pitch of voice</param>
 		/// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
 		/// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
-		/// <param name="cancelToken">Canelation token to stop speak</param> 
+		/// <param name="cancelToken">Canelation token to stop speak</param>
 		public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
         {
             if (string.IsNullOrWhiteSpace(text))
                 return;
 
-            try 
-            {                
+            try
+            {
                 await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
                 var speechUtterance = GetSpeechUtterance(text, crossLocale, pitch, speakRate, volume);
                 await SpeakUtterance(speechUtterance, cancelToken);
             }
-            finally 
+            finally
             {
                 semaphore.Release();
             }
@@ -158,7 +153,7 @@ namespace Plugin.TextToSpeech
         TaskCompletionSource<object> currentSpeak;
         async Task SpeakUtterance(AVSpeechUtterance speechUtterance, CancellationToken? cancelToken)
         {
-            try 
+            try
             {
                 currentSpeak = new TaskCompletionSource<object>();
                 cancelToken?.Register(() => TryCancel());
@@ -168,14 +163,14 @@ namespace Plugin.TextToSpeech
 
                 await currentSpeak.Task;
             }
-            finally 
+            finally
             {
                 speechSynthesizer.DidFinishSpeechUtterance -= this.OnFinishedSpeechUtterance;
             }
         }
 
 
-        void OnFinishedSpeechUtterance(object sender, AVSpeechSynthesizerUteranceEventArgs args) 
+        void OnFinishedSpeechUtterance(object sender, AVSpeechSynthesizerUteranceEventArgs args)
         {
             currentSpeak?.TrySetResult(null);
         }

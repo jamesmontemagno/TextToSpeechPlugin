@@ -67,11 +67,11 @@ namespace Plugin.TextToSpeech
 		/// <param name="pitch">Pitch of voice</param>
 		/// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
 		/// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
-		/// <param name="cancelToken">Canelation token to stop speak</param> 
+		/// <param name="cancelToken">Canelation token to stop speak</param>
 		public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
         {
-            try 
-            {               
+            try
+            {
                 await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
                 this.text = text;
                 this.language = crossLocale;
@@ -79,10 +79,10 @@ namespace Plugin.TextToSpeech
                 this.speakRate = speakRate == null ? 1.0f : speakRate.Value;
 
                 // TODO: need to wait lock so not to break people using queuing mechanism
-                await this.Init();
+                await Init();
                 await Speak(cancelToken);
             }
-            finally 
+            finally
             {
                 semaphore.Release();
             }
@@ -128,23 +128,6 @@ namespace Plugin.TextToSpeech
 #pragma warning restore 0618
         }
 
-        /// <summary>
-        /// In a different method as it can crash on older target/compile for some reason
-        /// </summary>
-        private void SetDefaultLanguageLollipop()
-        {
-            /*if (textToSpeech.DefaultVoice != null)
-            {
-              textToSpeech.SetVoice(textToSpeech.DefaultVoice);
-              if (textToSpeech.DefaultVoice.Locale != null)
-                textToSpeech.SetLanguage(textToSpeech.DefaultVoice.Locale);
-            }
-            else
-              SetDefaultLanguageNonLollipop();*/
-
-
-
-        }
 
         Task Speak(CancellationToken? cancelToken)
         {
