@@ -21,9 +21,13 @@ namespace Plugin.TextToSpeech
         }
 
 
-        public Task Speak(string text,CrossLocale? crossLocale = default(CrossLocale?),float? pitch = default(float?),float? speakRate = default(float?),float? volume = default(float?),CancellationToken? cancelToken = default(CancellationToken?))
+        public async Task Speak(string text, CrossLocale? crossLocale, float? pitch, float? speakRate, float? volume, CancellationToken? cancelToken)
         {
-            throw new NotImplementedException();
+            if (String.IsNullOrWhiteSpace(text))
+                throw new ArgumentException("Text is empty");
+
+            speechSynthesizer.De
+            speechSynthesizer.StartSpeakingString(text);
         }
 
 
