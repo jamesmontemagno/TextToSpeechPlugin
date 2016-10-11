@@ -25,8 +25,7 @@ namespace Plugin.TextToSpeech
         {
             if (String.IsNullOrWhiteSpace(text))
                 throw new ArgumentException("Text is empty");
-
-            speechSynthesizer.De
+                
             speechSynthesizer.StartSpeakingString(text);
         }
 
@@ -35,6 +34,11 @@ namespace Plugin.TextToSpeech
         {
             throw new NotImplementedException();
         }
+                /// <summary>
+        /// Gets the max string length of the speech engine
+        /// -1 means no limit
+        /// </summary>
+        public int MaxSpeechInputLength => -1;
 
 
         public void Dispose()

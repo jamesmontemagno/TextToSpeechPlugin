@@ -40,12 +40,14 @@ namespace Plugin.TextToSpeech
         /// <param name="pitch">Pitch of voice</param>
         /// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
         /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
-        /// <param name="cancelToken">Canelation token to stop speak</param>
+        /// <param name="cancelToken">Canelation token to stop speak</param> 
+        /// <exception cref="ArgumentNullException">Thrown if text is null</exception>
+        /// <exception cref="ArgumentException">Thrown if text length is greater than maximum allowed</exception>
         public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
         {
-            if (string.IsNullOrWhiteSpace(text))
-                return;
-
+            if (text == null)
+                throw new ArgumentNullException(nameof(text), "Text can not be null");
+            
             try
             {
                 await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
@@ -179,6 +181,7 @@ namespace Plugin.TextToSpeech
                 //await speechSynthesizer.SpeakTextAsync(text);
 
                 cancelToken?.Register(() => speechSynthesizer.CancelAll());
+                
                 await speechSynthesizer.SpeakSsmlAsync(ssmlText);
 #endif
             }
@@ -209,6 +212,12 @@ namespace Plugin.TextToSpeech
               .Select(g => g.First());
 #endif
         }
+
+        /// <summary>
+        /// Gets the max string length of the speech engine
+        /// -1 means no limit
+        /// </summary>
+        public int MaxSpeechInputLength => -1;
 
         /// <summary>
         /// Dispose of TTS
