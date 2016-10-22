@@ -90,11 +90,11 @@
     <InterfaceDefinition Include="Main.storyboard" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
+    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
       <Project>{6D8696FC-961B-4321-8294-4AD3CBB05615}</Project>
       <Name>TextToSpeech.Plugin.Abstractions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\TextToSpeech.Plugin.Mac\TextToSpeech.Plugin.Mac.csproj">
+    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.Mac\TextToSpeech.Plugin.Mac.csproj">
       <Project>{04667DCF-6340-453D-A573-79216E07F69F}</Project>
       <Name>TextToSpeech.Plugin.Mac</Name>
     </ProjectReference>

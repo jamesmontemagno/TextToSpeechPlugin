@@ -29,7 +29,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeech.Plugin.UWP", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeech.Plugin.Mac", "TextToSpeech.Plugin.Mac\TextToSpeech.Plugin.Mac.csproj", "{04667DCF-6340-453D-A573-79216E07F69F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.Mac", "..\test\Samples.Mac.csproj", "{1B2F1C41-DA6F-473E-8522-3EE2C33F0095}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.Mac", "..\test\Samples.Mac\Samples.Mac.csproj", "{1B2F1C41-DA6F-473E-8522-3EE2C33F0095}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
