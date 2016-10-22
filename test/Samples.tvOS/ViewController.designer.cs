@@ -26,6 +26,10 @@ namespace Samples.tvOS
         [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UILabel Label { get; set; }
 
+        [Action ("btnTestQueue_Pressed:")]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        partial void btnTestQueue_Pressed (UIKit.UIButton sender);
+
         void ReleaseDesignerOutlets ()
         {
             if (btnSayHello != null) {

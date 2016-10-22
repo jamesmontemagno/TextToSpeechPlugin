@@ -21,36 +21,13 @@ namespace Samples.tvOS
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-            base.ViewDidLoad();
 
             Label.TextColor = UIColor.Red;
             Label.Text = String.Empty;
+            btnSayHello.Enabled = true;
+            btnTestQueue.Enabled = true;
 
-            btnTestQueue.PrimaryActionTriggered += async (sender, args) =>
-            {
-                Label.Text = String.Empty;
-                btnTestQueue.Enabled = false;
-                try
-                {
-                    cancelSrc = new CancellationTokenSource();
-                    await Task.WhenAll(
-                        CrossTextToSpeech.Current.Speak("Queue 1", cancelToken: cancelSrc.Token),
-                        CrossTextToSpeech.Current.Speak("Queue 2", cancelToken: cancelSrc.Token),
-                        CrossTextToSpeech.Current.Speak("Queue 3", cancelToken: cancelSrc.Token),
-                        CrossTextToSpeech.Current.Speak("Queue 4", cancelToken: cancelSrc.Token),
-                        CrossTextToSpeech.Current.Speak("Queue 5", cancelToken: cancelSrc.Token)
-                    );
-                }
-                catch (Exception ex)
-                {
-                    Label.Text = ex.ToString();
-                }
-                finally
-                {
-                    btnTestQueue.Enabled = true;
-                }
-            };
-            btnSayHello.PrimaryActionTriggered += async (sender, args) =>
+            btnSayHello.AllEvents += async (sender, args) =>
             {
                 Label.Text = String.Empty;
                 btnSayHello.TitleLabel.Text = "Cancel Speech";
@@ -82,6 +59,38 @@ namespace Samples.tvOS
                     cancelSrc = null;
                 }
             };
+        }
+
+
+        partial void btnTestQueue_Pressed(UIButton sender)
+        {
+            CallTestQueue();
+        }
+
+
+        async Task CallTestQueue() 
+        {
+            Label.Text = String.Empty;
+            btnTestQueue.Enabled = false;
+            try
+            {
+                cancelSrc = new CancellationTokenSource();
+                await Task.WhenAll(
+                    CrossTextToSpeech.Current.Speak("Queue 1", cancelToken: cancelSrc.Token),
+                    CrossTextToSpeech.Current.Speak("Queue 2", cancelToken: cancelSrc.Token),
+                    CrossTextToSpeech.Current.Speak("Queue 3", cancelToken: cancelSrc.Token),
+                    CrossTextToSpeech.Current.Speak("Queue 4", cancelToken: cancelSrc.Token),
+                    CrossTextToSpeech.Current.Speak("Queue 5", cancelToken: cancelSrc.Token)
+                );
+            }
+            catch (Exception ex)
+            {
+                Label.Text = ex.ToString();
+            }
+            finally
+            {
+                btnTestQueue.Enabled = true;
+            }            
         }
     }
 }
