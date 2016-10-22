@@ -44,7 +44,6 @@ namespace Plugin.TextToSpeech
             if (text == null)
                 throw new ArgumentNullException(nameof(text), "Text can not be null");
 
-
             try
             {
                 await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
@@ -74,6 +73,7 @@ namespace Plugin.TextToSpeech
 
             var voice = GetVoiceForLocaleLanguage(crossLocale);
 
+#if __IOS__
             if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
             {
                 //speechUtterance = new AVSpeechUtterance(" ");
@@ -82,6 +82,7 @@ namespace Plugin.TextToSpeech
             }
             else
             {
+#endif
                 speakRate = NormalizeSpeakRate(speakRate);
                 volume = NormalizeVolume(volume);
                 pitch = NormalizePitch(pitch);
@@ -93,8 +94,9 @@ namespace Plugin.TextToSpeech
                     Volume = volume.Value,
                     PitchMultiplier = pitch.Value
                 };
+#if __IOS__
             }
-
+#endif
             return speechUtterance;
         }
 
@@ -118,13 +120,14 @@ namespace Plugin.TextToSpeech
         private float? NormalizeSpeakRate(float? speakRate)
         {
             var divid = 4.0f;
+#if __IOS__
             if (UIDevice.CurrentDevice.CheckSystemVersion(9, 0)) //use default .5f
                 divid = 2.0f;
             else if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0)) //use .125f
                 divid = 8.0f;
             else
                 divid = 4.0f; //use .25f
-
+#endif
             if (!speakRate.HasValue)
                 speakRate = AVSpeechUtterance.MaximumSpeechRate / divid; //normal speech, default is fast
             else if (speakRate.Value > AVSpeechUtterance.MaximumSpeechRate)
