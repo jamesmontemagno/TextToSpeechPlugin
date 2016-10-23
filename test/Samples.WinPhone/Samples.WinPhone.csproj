@@ -113,11 +113,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
+    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
       <Project>{6d8696fc-961b-4321-8294-4ad3cbb05615}</Project>
       <Name>TextToSpeech.Plugin.Abstractions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\.Plugin.WinPhoneRT\TextToSpeech.Plugin.WinPhoneRT.csproj">
+    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.WinPhoneRT\TextToSpeech.Plugin.WinPhoneRT.csproj">
       <Project>{31d27a80-cfd5-46f9-b24e-b5982e7a686c}</Project>
       <Name>TextToSpeech.Plugin.WinPhoneRT</Name>
     </ProjectReference>

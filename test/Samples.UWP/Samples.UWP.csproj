@@ -128,11 +128,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
+    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
       <Project>{6d8696fc-961b-4321-8294-4ad3cbb05615}</Project>
       <Name>TextToSpeech.Plugin.Abstractions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\.Plugin.UWP\TextToSpeech.Plugin.UWP.csproj">
+    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.UWP\TextToSpeech.Plugin.UWP.csproj">
       <Project>{3c6dda62-2b68-4199-a58b-5e2171268faa}</Project>
       <Name>TextToSpeech.Plugin.UWP</Name>
     </ProjectReference>

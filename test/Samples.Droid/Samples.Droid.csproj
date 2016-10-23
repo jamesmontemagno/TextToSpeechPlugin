@@ -121,11 +121,11 @@
     <AndroidResource Include="Resources\values\styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
+    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
       <Project>{6d8696fc-961b-4321-8294-4ad3cbb05615}</Project>
       <Name>TextToSpeech.Plugin.Abstractions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\.Plugin.Android\TextToSpeech.Plugin.Android.csproj">
+    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.Android\TextToSpeech.Plugin.Android.csproj">
       <Project>{c0aee080-f351-47ba-9489-fbb2c07d43af}</Project>
       <Name>TextToSpeech.Plugin.Android</Name>
     </ProjectReference>

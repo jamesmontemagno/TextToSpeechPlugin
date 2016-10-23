@@ -136,13 +136,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
+    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
       <Project>{6d8696fc-961b-4321-8294-4ad3cbb05615}</Project>
       <Name>TextToSpeech.Plugin.Abstractions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\.Plugin.WinStore\TextToSpeech.Plugin.WinStore.csproj">
-      <Project>{4b11ebd1-c6f9-4cb7-bcd0-3a7d75b90702}</Project>
-      <Name>TextToSpeech.Plugin.WinStore</Name>
     </ProjectReference>
     <ProjectReference Include="..\Samples\Samples.csproj">
       <Project>{64bce686-4ef2-494e-8fce-ef7393293a2f}</Project>

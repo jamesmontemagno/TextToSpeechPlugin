@@ -138,11 +138,11 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
+    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
       <Project>{6d8696fc-961b-4321-8294-4ad3cbb05615}</Project>
       <Name>TextToSpeech.Plugin.Abstractions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\.Plugin.iOSUnified\TextToSpeech.Plugin.iOSUnified.csproj">
+    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.iOSUnified\TextToSpeech.Plugin.iOSUnified.csproj">
       <Project>{cc4ca81f-6b30-4a3a-ae87-005350a885fb}</Project>
       <Name>TextToSpeech.Plugin.iOSUnified</Name>
       <IsAppExtension>false</IsAppExtension>
