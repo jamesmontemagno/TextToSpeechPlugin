@@ -9,13 +9,18 @@ using Plugin.TextToSpeech.Abstractions;
 
 namespace Plugin.TextToSpeech
 {
+    /// <summary>
+    /// Text to speech
+    /// </summary>
     public class TextToSpeech : ITextToSpeech, IDisposable
     {
         readonly NSSpeechSynthesizer speechSynthesizer;
         readonly TtsSpeechSynthesizerDelegate sdelegate;
         readonly SemaphoreSlim semaphore;
 
-
+        /// <summary>
+        /// Constructor for text to speech
+        /// </summary>
         public TextToSpeech()
         {
             sdelegate = new TtsSpeechSynthesizerDelegate();
