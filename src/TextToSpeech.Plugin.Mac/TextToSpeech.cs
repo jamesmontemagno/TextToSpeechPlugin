@@ -27,13 +27,22 @@ namespace Plugin.TextToSpeech
             speechSynthesizer = new NSSpeechSynthesizer { Delegate = sdelegate };
             semaphore = new SemaphoreSlim(1, 1);
         }
-
-
+        /// <summary>
+        /// Speak back text
+        /// </summary>
+        /// <param name="text">Text to speak</param>
+        /// <param name="crossLocale">Locale of voice</param>
+        /// <param name="pitch">Pitch of voice</param>
+        /// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
+        /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
+        /// <param name="cancelToken">Canelation token to stop speak</param> 
+        /// <exception cref="ArgumentNullException">Thrown if text is null</exception>
+        /// <exception cref="ArgumentException">Thrown if text length is greater than maximum allowed</exception>
         public async Task Speak(string text, CrossLocale? crossLocale, float? pitch, float? speakRate, float? volume, CancellationToken? cancelToken)
         {
-            if (String.IsNullOrWhiteSpace(text))
-                throw new ArgumentException("Text is empty");
-              
+            if (text == null)
+                throw new ArgumentNullException(nameof(text), "Text can not be null");
+
             var tcs = new TaskCompletionSource<object>();
             var handler = new EventHandler((sender, args) => tcs.TrySetResult(null));
 
@@ -70,7 +79,10 @@ namespace Plugin.TextToSpeech
             }
         }
 
-
+        /// <summary>
+        /// Get a list of all installed languages
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<CrossLocale> GetInstalledLanguages()
         {
             return NSSpeechSynthesizer
@@ -87,8 +99,8 @@ namespace Plugin.TextToSpeech
 
         public void Dispose()
         {
-            speechSynthesizer.Dispose();
-            semaphore.Dispose();
+            speechSynthesizer?.Dispose();
+            semaphore?.Dispose();
         }
 
 
