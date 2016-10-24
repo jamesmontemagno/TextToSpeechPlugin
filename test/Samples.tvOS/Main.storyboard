@@ -21,9 +21,7 @@
                                 <rect key="frame" x="746" y="202" width="414" height="86"/>
                                 <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                 <state key="normal" title="Test Queue"/>
-                                <connections>
-                                    <action selector="btnTestQueue_Pressed:" destination="BYZ-38-t0r" id="9"/>
-                                </connections>
+                                <connections/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="4" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
                                 <rect key="frame" x="746" y="356" width="414" height="86"/>
@@ -39,9 +37,9 @@
                         </subviews>
                     </view>
                     <connections>
-                        <outlet property="btnTestQueue" destination="3" id="name-outlet-3"/>
-                        <outlet property="btnSayHello" destination="4" id="name-outlet-4"/>
                         <outlet property="Label" destination="5" id="name-outlet-5"/>
+                        <outlet property="btnSayHello" destination="4" id="name-outlet-4"/>
+                        <outlet property="btnTestQueue" destination="3" id="name-outlet-3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

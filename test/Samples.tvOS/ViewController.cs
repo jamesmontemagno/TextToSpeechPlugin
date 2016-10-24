@@ -59,38 +59,32 @@ namespace Samples.tvOS
                     cancelSrc = null;
                 }
             };
-        }
 
 
-        partial void btnTestQueue_Pressed(UIButton sender)
-        {
-            CallTestQueue();
-        }
-
-
-        async Task CallTestQueue() 
-        {
-            Label.Text = String.Empty;
-            btnTestQueue.Enabled = false;
-            try
+            btnTestQueue.AllEvents += async (sender, args) => 
             {
-                cancelSrc = new CancellationTokenSource();
-                await Task.WhenAll(
-                    CrossTextToSpeech.Current.Speak("Queue 1", cancelToken: cancelSrc.Token),
-                    CrossTextToSpeech.Current.Speak("Queue 2", cancelToken: cancelSrc.Token),
-                    CrossTextToSpeech.Current.Speak("Queue 3", cancelToken: cancelSrc.Token),
-                    CrossTextToSpeech.Current.Speak("Queue 4", cancelToken: cancelSrc.Token),
-                    CrossTextToSpeech.Current.Speak("Queue 5", cancelToken: cancelSrc.Token)
-                );
-            }
-            catch (Exception ex)
-            {
-                Label.Text = ex.ToString();
-            }
-            finally
-            {
-                btnTestQueue.Enabled = true;
-            }            
+                Label.Text = String.Empty;
+                btnTestQueue.Enabled = false;
+                try
+                {
+                    cancelSrc = new CancellationTokenSource();
+                    await Task.WhenAll(
+                        CrossTextToSpeech.Current.Speak("Queue 1", cancelToken: cancelSrc.Token),
+                        CrossTextToSpeech.Current.Speak("Queue 2", cancelToken: cancelSrc.Token),
+                        CrossTextToSpeech.Current.Speak("Queue 3", cancelToken: cancelSrc.Token),
+                        CrossTextToSpeech.Current.Speak("Queue 4", cancelToken: cancelSrc.Token),
+                        CrossTextToSpeech.Current.Speak("Queue 5", cancelToken: cancelSrc.Token)
+                    );
+                }
+                catch (Exception ex)
+                {
+                    Label.Text = ex.ToString();
+                }
+                finally
+                {
+                    btnTestQueue.Enabled = true;
+                }                
+            };
         }
     }
 }
