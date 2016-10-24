@@ -72,6 +72,12 @@
         <file src="src\TextToSpeech.Plugin.iOSUnified\bin\iPhone\Release\Plugin.TextToSpeech.dll" target="lib\Xamarin.iOS10\Plugin.TextToSpeech.dll" />
         <file src="src\TextToSpeech.Plugin.iOSUnified\bin\iPhone\Release\Plugin.TextToSpeech.xml" target="lib\Xamarin.iOS10\Plugin.TextToSpeech.xml" />
 
+        <!--Xamarin.tvOS-->
+        <file src="src\TextToSpeech.Plugin.Abstractions\bin\Release\Plugin.TextToSpeech.Abstractions.dll" target="lib\Xamarin.tvOS10\Plugin.TextToSpeech.Abstractions.dll" />
+        <file src="src\TextToSpeech.Plugin.Abstractions\bin\Release\Plugin.TextToSpeech.Abstractions.xml" target="lib\Xamarin.tvOS10\Plugin.TextToSpeech.Abstractions.xml" />
+        <file src="src\TextToSpeech.Plugin.tvOS\bin\Release\Plugin.TextToSpeech.dll" target="lib\Xamarin.tvOS10\Plugin.TextToSpeech.dll" />
+        <file src="src\TextToSpeech.Plugin.tvOS\bin\Release\Plugin.TextToSpeech.xml" target="lib\Xamarin.tvOS10\Plugin.TextToSpeech.xml" />
+
         <!--Xamarin.Mac
         <file src="src\TextToSpeech.Plugin.Abstractions\bin\Release\Plugin.TextToSpeech.Abstractions.dll" target="lib\Xamarin.Mac20\Plugin.TextToSpeech.Abstractions.dll" />
         <file src="src\TextToSpeech.Plugin.Abstractions\bin\Release\Plugin.TextToSpeech.Abstractions.xml" target="lib\Xamarin.Mac20\Plugin.TextToSpeech.Abstractions.xml" />
