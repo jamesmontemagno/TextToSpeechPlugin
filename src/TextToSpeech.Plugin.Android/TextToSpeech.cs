@@ -137,10 +137,10 @@ namespace Plugin.TextToSpeech
         }
 
 
-        Task Speak(CancellationToken? cancelToken)
+        async Task Speak(CancellationToken? cancelToken)
         {
             if (string.IsNullOrWhiteSpace(text))
-                return Task.CompletedTask;
+                return;
 
             if (language.HasValue && !string.IsNullOrWhiteSpace(language.Value.Language))
             {
@@ -167,11 +167,6 @@ namespace Plugin.TextToSpeech
             }
 
             var tcs = new TaskCompletionSource<object>();
-            cancelToken?.Register(() =>
-            {
-                textToSpeech.Stop();
-                tcs.TrySetCanceled();
-            });
             textToSpeech.SetPitch(pitch);
             textToSpeech.SetSpeechRate(speakRate);
             textToSpeech.SetOnUtteranceProgressListener(new TtsProgressListener(tcs));
@@ -179,7 +174,15 @@ namespace Plugin.TextToSpeech
 			textToSpeech.Speak(text, QueueMode.Flush, null);
 #pragma warning restore CS0618 // Type or member is obsolete
 
-			return tcs.Task;
+            Action cleanup = () =>
+            {
+                textToSpeech.Stop();
+                tcs.TrySetCanceled();
+            };
+            using (cancelToken?.Register(cleanup))
+            {
+                await tcs.Task;
+            }
         }
 
         /// <summary>
