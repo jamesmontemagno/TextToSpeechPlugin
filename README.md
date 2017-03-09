@@ -39,7 +39,7 @@ Build status:
 
 **Simple Text**
 ```csharp
-await CrossTextToSpeech.Current.Speak("Text to speak");
+CrossTextToSpeech.Current.Speak("Text to speak");
 ```
 
 **Advanced speech API**
