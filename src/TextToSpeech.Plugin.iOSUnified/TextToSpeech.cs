@@ -159,12 +159,13 @@ namespace Plugin.TextToSpeech
             try
             {
                 currentSpeak = new TaskCompletionSource<object>();
-                cancelToken?.Register(() => TryCancel());
 
                 speechSynthesizer.DidFinishSpeechUtterance += this.OnFinishedSpeechUtterance;
                 speechSynthesizer.SpeakUtterance(speechUtterance);
-
-                await currentSpeak.Task;
+                using (cancelToken?.Register(TryCancel))
+                {
+                    await currentSpeak.Task;
+                }
             }
             finally
             {

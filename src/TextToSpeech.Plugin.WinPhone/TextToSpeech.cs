@@ -163,13 +163,17 @@ namespace Plugin.TextToSpeech
                     player.SetStreamSource(stream);
                     player.Play();
 
-                    cancelToken?.Register(() =>
+                    Action cleanup = () =>
                     {
                         player.PlaybackRate = 0;
                         tcs.TrySetResult(null);
-                    });
+                    };
 
-                    await tcs.Task;
+                    using (cancelToken?.Register(cleanup))
+                    {
+                        await tcs.Task;
+                    }
+                    
                     player.MediaEnded -= handler;
                 }
                 catch (Exception ex)
@@ -180,9 +184,10 @@ namespace Plugin.TextToSpeech
                 //cancelToken?.Register(() => speechSynthesizer.CancelAll());
                 //await speechSynthesizer.SpeakTextAsync(text);
 
-                cancelToken?.Register(() => speechSynthesizer.CancelAll());
-                
-                await speechSynthesizer.SpeakSsmlAsync(ssmlText);
+                using (cancelToken?.Register(() => speechSynthesizer.CancelAll()))
+                {
+                    await speechSynthesizer.SpeakSsmlAsync(ssmlText);
+                }
 #endif
             }
             finally
