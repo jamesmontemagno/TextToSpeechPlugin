@@ -172,11 +172,14 @@ namespace Plugin.TextToSpeech
                 textToSpeech.Stop();
                 tcs.TrySetCanceled();
             });
+
+            var utteranceProgressListenerDictionary = new Dictionary<string, string>();
+            utteranceProgressListenerDictionary.Add(Android.Speech.Tts.TextToSpeech.Engine.KeyParamUtteranceId, "SomethingUnique");
             textToSpeech.SetPitch(pitch);
             textToSpeech.SetSpeechRate(speakRate);
             textToSpeech.SetOnUtteranceProgressListener(new TtsProgressListener(tcs));
 #pragma warning disable CS0618 // Type or member is obsolete
-			textToSpeech.Speak(text, QueueMode.Flush, null);
+			textToSpeech.Speak(text, QueueMode.Flush, utteranceProgressListenerDictionary);
 #pragma warning restore CS0618 // Type or member is obsolete
 
 			return tcs.Task;
