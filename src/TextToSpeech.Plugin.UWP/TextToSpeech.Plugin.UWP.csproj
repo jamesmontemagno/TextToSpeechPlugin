@@ -109,24 +109,21 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\TextToSpeech.Plugin.WinPhone\TextToSpeech.cs">
-      <Link>TextToSpeech.cs</Link>
-    </Compile>
     <Compile Include="..\TextToSpeech.Plugin\CrossTextToSpeech.cs">
       <Link>CrossTextToSpeech.cs</Link>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="Properties\Plugin.TextToSpeech.rd.xml" />
-    <Compile Include="..\TextToSpeech.Plugin\Properties\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
+    <Compile Include="TextToSpeech.cs" />
+    <EmbeddedResource Include="Properties\Plugin.TextToSpeech.rd.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
-      <Project>{6d8696fc-961b-4321-8294-4ad3cbb05615}</Project>
+      <Project>{a9a66f86-2187-4272-aeb7-3fd72f341d87}</Project>
       <Name>TextToSpeech.Plugin.Abstractions</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\TextToSpeech.Plugin.Shared\TextToSpeech.Plugin.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

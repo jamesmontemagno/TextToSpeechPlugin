@@ -1,8 +1,5 @@
 ﻿using Plugin.TextToSpeech.Abstractions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Plugin.TextToSpeech
 {
@@ -10,49 +7,54 @@ namespace Plugin.TextToSpeech
 	/// Cross platform TTS implemenations
 	/// </summary>
 	public class CrossTextToSpeech
-	{
-		static Lazy<ITextToSpeech> TTS = new Lazy<ITextToSpeech>(() => CreateTextToSpeech(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
+    {
+        static Lazy<ITextToSpeech> implementation = new Lazy<ITextToSpeech>(() => CreateTextToSpeech(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
 
 		/// <summary>
-		/// Current settings to use
+		/// Gets if the plugin is supported on the current platform.
 		/// </summary>
-		public static ITextToSpeech Current
-		{
-			get
-			{
-				var ret = TTS.Value;
-				if (ret == null)
-				{
-					throw NotImplementedInReferenceAssembly();
-				}
-				return ret;
-			}
-		}
+		public static bool IsSupported => implementation.Value == null ? false : true;
 
-		static ITextToSpeech CreateTextToSpeech()
-		{
-#if PORTABLE
+        /// <summary>
+        /// Current plugin implementation to use
+        /// </summary>
+        public static ITextToSpeech Current
+        {
+            get
+            {
+                var ret = implementation.Value;
+                if (ret == null)
+                {
+                    throw NotImplementedInReferenceAssembly();
+                }
+                return ret;
+            }
+        }
+
+        static ITextToSpeech CreateTextToSpeech()
+        {
+#if NETSTANDARD1_0
 			return null;
 #else
-        return new TextToSpeech();
+            return new TextToSpeech();
 #endif
-		}
+        }
 
-		internal static Exception NotImplementedInReferenceAssembly()
-		{
-			return new NotImplementedException("This functionality is not implemented in the portable version of this assembly.  You should reference the Xam.Plugins.TextToSpeech NuGet package from your main application project in order to reference the platform-specific implementation.");
-		}
+        internal static Exception NotImplementedInReferenceAssembly() =>
+			new NotImplementedException("This functionality is not implemented in the portable version of this assembly.  You should reference the NuGet package from your main application project in order to reference the platform-specific implementation.");
+        
 
-		/// <summary>
-		/// Dispose of TTS, reset lazy load
-		/// </summary>
-		public static void Dispose()
-		{
-			if (TTS.Value != null && TTS.IsValueCreated)
-			{
-				TTS.Value.Dispose();
-				TTS = new Lazy<ITextToSpeech>(() => CreateTextToSpeech(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
-			}
-		}
-	}
+        /// <summary>
+        /// Dispose of TTS, reset lazy load
+        /// </summary>
+        public static void Dispose()
+        {
+            if (implementation.Value != null && implementation.IsValueCreated)
+            {
+                implementation.Value.Dispose();
+                implementation = new Lazy<ITextToSpeech>(() => CreateTextToSpeech(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
+            }
+        }
+    }
 }

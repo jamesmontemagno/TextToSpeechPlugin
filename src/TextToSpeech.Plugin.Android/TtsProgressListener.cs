@@ -16,29 +16,27 @@ namespace Plugin.TextToSpeech
 		/// Initializes a new instance of the <see cref="T:Plugin.TextToSpeech.TtsProgressListener"/> class.
 		/// </summary>
 		/// <param name="tcs">Tcs.</param>
-        public TtsProgressListener(TaskCompletionSource<object> tcs)
-        {
-            completionSource = tcs;
-        }
+        public TtsProgressListener(TaskCompletionSource<object> tcs) => completionSource = tcs;
+
 
 
 		/// <summary>
-		/// Ons the done.
+		/// Gets called on done to trigger next event.
 		/// </summary>
 		/// <param name="utteranceId">Utterance identifier.</param>
-        public override void OnDone(string utteranceId)
-        {
-            completionSource.TrySetResult(null);
-        }
+		public override void OnDone(string utteranceId) =>
+			completionSource?.TrySetResult(null);
+		
+
+
 
 		/// <summary>
 		/// Ons the error.
 		/// </summary>
 		/// <param name="utteranceId">Utterance identifier.</param>
-        public override void OnError(string utteranceId)
-        {
-            completionSource.TrySetException(new ArgumentException("Error with TTS engine on progress listener"));
-        }
+		public override void OnError(string utteranceId) =>
+			completionSource?.TrySetException(new ArgumentException("Error with TTS engine on progress listener"));
+        
 
 		/// <summary>
 		/// Ons the start.

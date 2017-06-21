@@ -3,15 +3,10 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-#if NETFX_CORE
 using Windows.Media.SpeechSynthesis;
 using System.Diagnostics;
 using Windows.Media.Playback;
-#else
-using Windows.Phone.Speech.Synthesis;
-#endif
 
 namespace Plugin.TextToSpeech
 {
@@ -27,10 +22,8 @@ namespace Plugin.TextToSpeech
         /// <summary>
         /// SpeechSynthesizer
         /// </summary>
-        public TextToSpeech()
-        {
-            speechSynthesizer = new SpeechSynthesizer();
-        }
+        public TextToSpeech() => speechSynthesizer = new SpeechSynthesizer();
+        
 
         /// <summary>
         /// Speak back text
@@ -59,28 +52,19 @@ namespace Plugin.TextToSpeech
                     if (crossLocale.HasValue && !string.IsNullOrWhiteSpace(crossLocale.Value.Language))
                     {
                         localCode = crossLocale.Value.Language;
-#if NETFX_CORE
+
                         var voices = from voice in SpeechSynthesizer.AllVoices
                                      where (voice.Language == localCode
                                             && voice.Gender.Equals(VoiceGender.Female))
                                      select voice;
                         speechSynthesizer.Voice = (voices.Any() ? voices.ElementAt(0) : SpeechSynthesizer.DefaultVoice);
 
-#else
-                        var voices = from voice in InstalledVoices.All
-                                     where (voice.Language == localCode
-                                            && voice.Gender.Equals(VoiceGender.Female))
-                                     select voice;
-                        speechSynthesizer.SetVoice(voices.Any() ? voices.ElementAt(0) : InstalledVoices.Default);
-#endif
+
                     }
                     else
                     {
-#if NETFX_CORE
                         speechSynthesizer.Voice = SpeechSynthesizer.DefaultVoice;
-#else
-                        speechSynthesizer.SetVoice(InstalledVoices.Default);
-#endif
+
                     }
                 }
 
@@ -88,34 +72,21 @@ namespace Plugin.TextToSpeech
                 if (crossLocale.HasValue && !string.IsNullOrWhiteSpace(crossLocale.Value.Language))
                 {
                     localCode = crossLocale.Value.Language;
-#if NETFX_CORE
                     var voices = from voice in SpeechSynthesizer.AllVoices
                                  where (voice.Language == localCode
                                         && voice.Gender.Equals(VoiceGender.Female))
                                  select voice;
-#else
-                    var voices = from voice in InstalledVoices.All
-                                 where (voice.Language == localCode
-                                        && voice.Gender.Equals(VoiceGender.Female))
-                                 select voice;
 
-#endif
                     if (!voices.Any())
                     {
-#if NETFX_CORE
                         localCode = SpeechSynthesizer.DefaultVoice.Language;
-#else
-                        localCode = InstalledVoices.Default.Language;
-#endif
+
                     }
                 }
                 else
                 {
-#if NETFX_CORE
                     localCode = SpeechSynthesizer.DefaultVoice.Language;
-#else
-                    localCode = InstalledVoices.Default.Language;
-#endif
+
                 }
 
 
@@ -150,7 +121,6 @@ namespace Plugin.TextToSpeech
                             speakRate ?? 1F + "\" >" + text + "</prosody>";
                 ssmlText += "</speak>";
 
-#if NETFX_CORE
                 var tcs = new TaskCompletionSource<object>();
                 var handler = new TypedEventHandler<MediaPlayer, object>((sender, args) => tcs.TrySetResult(null));
 
@@ -176,14 +146,7 @@ namespace Plugin.TextToSpeech
                 {
                     Debug.WriteLine("Unable to playback stream: " + ex);
                 }
-#else
-                //cancelToken?.Register(() => speechSynthesizer.CancelAll());
-                //await speechSynthesizer.SpeakTextAsync(text);
 
-                cancelToken?.Register(() => speechSynthesizer.CancelAll());
-                
-                await speechSynthesizer.SpeakSsmlAsync(ssmlText);
-#endif
             }
             finally
             {
@@ -196,22 +159,13 @@ namespace Plugin.TextToSpeech
         /// Get all installed and valid languages
         /// </summary>
         /// <returns></returns>
-        public System.Collections.Generic.IEnumerable<CrossLocale> GetInstalledLanguages()
-        {
-#if NETFX_CORE
-            return SpeechSynthesizer.AllVoices
+        public System.Collections.Generic.IEnumerable<CrossLocale> GetInstalledLanguages() =>
+			SpeechSynthesizer.AllVoices
               .OrderBy(a => a.Language)
               .Select(a => new CrossLocale { Language = a.Language, DisplayName = a.DisplayName })
               .GroupBy(c => c.ToString())
               .Select(g => g.First());
-#else
-            return InstalledVoices.All
-              .OrderBy(a => a.Language)
-              .Select(a => new CrossLocale { Language = a.Language, DisplayName = a.DisplayName })
-              .GroupBy(c => c.ToString())
-              .Select(g => g.First());
-#endif
-        }
+
 
         /// <summary>
         /// Gets the max string length of the speech engine
@@ -222,9 +176,7 @@ namespace Plugin.TextToSpeech
         /// <summary>
         /// Dispose of TTS
         /// </summary>
-        public void Dispose()
-        {
+        public void Dispose() =>
             speechSynthesizer?.Dispose();
-        }
     }
 }

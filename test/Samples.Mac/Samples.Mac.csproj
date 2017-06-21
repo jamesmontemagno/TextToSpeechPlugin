@@ -96,12 +96,13 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
-      <Project>{6D8696FC-961B-4321-8294-4AD3CBB05615}</Project>
+      <Project>{a9a66f86-2187-4272-aeb7-3fd72f341d87}</Project>
       <Name>TextToSpeech.Plugin.Abstractions</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\TextToSpeech.Plugin.Mac\TextToSpeech.Plugin.Mac.csproj">
-      <Project>{04667DCF-6340-453D-A573-79216E07F69F}</Project>
+      <Project>{04667dcf-6340-453d-a573-79216e07f69f}</Project>
       <Name>TextToSpeech.Plugin.Mac</Name>
+      <IsAppExtension>false</IsAppExtension>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />

@@ -21,7 +21,7 @@ namespace Plugin.TextToSpeech
         CrossLocale? language;
         float pitch, speakRate;
         bool initialized;
-
+		int count;
 
 
         TaskCompletionSource<bool> initTcs;
@@ -97,12 +97,9 @@ namespace Plugin.TextToSpeech
         }
 
 
-        private void SetDefaultLanguage()
-        {
-            SetDefaultLanguageNonLollipop();
+        private void SetDefaultLanguage() => SetDefaultLanguageNonLollipop();
 
-        }
-
+        
         private void SetDefaultLanguageNonLollipop()
         {
             //disable warning because we are checking ahead of time.
@@ -176,7 +173,13 @@ namespace Plugin.TextToSpeech
             textToSpeech.SetSpeechRate(speakRate);
             textToSpeech.SetOnUtteranceProgressListener(new TtsProgressListener(tcs));
 #pragma warning disable CS0618 // Type or member is obsolete
-			textToSpeech.Speak(text, QueueMode.Flush, null);
+
+			count++;
+			var map = new Dictionary<string, string>
+			{
+				[Android.Speech.Tts.TextToSpeech.Engine.KeyParamUtteranceId] = count.ToString()
+			};
+			textToSpeech.Speak(text, QueueMode.Flush, map);
 #pragma warning restore CS0618 // Type or member is obsolete
 
 			return tcs.Task;
@@ -190,8 +193,8 @@ namespace Plugin.TextToSpeech
         {
             if (textToSpeech != null && initialized)
             {
-                int version = (int)global::Android.OS.Build.VERSION.SdkInt;
-                bool isLollipop = version >= 21;
+                var version = (int)global::Android.OS.Build.VERSION.SdkInt;
+                var isLollipop = version >= 21;
                 if (isLollipop)
                 {
                     try

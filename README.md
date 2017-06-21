@@ -16,15 +16,11 @@ Build status:
 **Platform Support**
 
 |Platform|Supported|Version|
-| ------------------- | :-----------: | :------------------: |
-|Xamarin.iOS|Yes|iOS 7+|
-|Xamarin.iOS Unified|Yes|iOS 7+|
-|Xamarin.Android|Yes|API 10+|
-|Windows Phone Silverlight|Yes|8.0+|
-|Windows Phone RT|Yes|8.1+|
-|Windows Store RT|Yes|8.1+|
-|Windows 10 UWP|Yes|10+|
-|Xamarin.Mac|No||
+| ------------------- | :------------------: |
+|Xamarin.iOS|iOS 7+|
+|Xamarin.Android|API 10+|
+|Windows 10 UWP|10+|
+|Xamarin.Mac|All|
 
 
 ### Features
@@ -84,16 +80,6 @@ You must add ID_CAP_SPEECH_RECOGNITION permission
 
 ### Branches
 Main branch is always the current development beta branch. This means that all new work can be done off this branch. For each release of a stable NuGet package a new release branch will be created so any additional hot fixes could be done off of that branch.
-
-### Contributions
-Contributions are welcome! If you find a bug please report it and if you want a feature please report it.
-
-If you want to contribute code please file an issue first and mark that you will be working on it so we can figure out a release path. The flow should go:
-
-1. Create an issue
-2. Fork project
-3. Create branch off of master (or the branch that needs a hot fix)
-4. Send pull request to the branch that code should be merged in (ensuring that you mark the issue that it is fixing)
 
 #### License
 Under MIT, see LICENSE file.

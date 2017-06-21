@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Plugin.TextToSpeech;
+using Plugin.TextToSpeech.Abstractions;
+
 using Xamarin.Forms;
 
 namespace Samples
@@ -11,6 +14,7 @@ namespace Samples
         CancellationTokenSource cancelSrc;
         const string MSG = "This is a test of the emergency broadcast system.  Had this had been an actual emergency, I'm sure something else important would have happened";
 
+		CrossLocale? lang = null;
 
         public App()
         {
@@ -26,11 +30,11 @@ namespace Samples
                 {
 
                     await Task.WhenAll(
-                        CrossTextToSpeech.Current.Speak("Queue 1"),
-                        CrossTextToSpeech.Current.Speak("Queue 2"),
-                        CrossTextToSpeech.Current.Speak("Queue 3"),
-                        CrossTextToSpeech.Current.Speak("Queue 4"),
-                        CrossTextToSpeech.Current.Speak("Queue 5")
+                        CrossTextToSpeech.Current.Speak("Queue 1", lang),
+                        CrossTextToSpeech.Current.Speak("Queue 2", lang),
+                        CrossTextToSpeech.Current.Speak("Queue 3", lang),
+                        CrossTextToSpeech.Current.Speak("Queue 4", lang),
+                        CrossTextToSpeech.Current.Speak("Queue 5", lang)
                     );
                 }
                 catch (Exception ex)
@@ -44,14 +48,14 @@ namespace Samples
             });
             btn.Command = new Command(async () =>
             {
-                lbl.Text = String.Empty;
+                lbl.Text = string.Empty;
                 btn.Text = "Cancel Speech";
                 try
                 {
                     if (cancelSrc == null)
                     {
                         cancelSrc = new CancellationTokenSource();
-                        await CrossTextToSpeech.Current.Speak(MSG, cancelToken: cancelSrc.Token);
+                        await CrossTextToSpeech.Current.Speak(MSG, crossLocale: lang, cancelToken: cancelSrc.Token);
                         cancelSrc = null;
                     }
                     else
@@ -77,6 +81,24 @@ namespace Samples
 
 
 
+			var language = new Label
+			{
+				Text = "Default language"
+			};
+
+			var pickLanguage = new Button
+			{
+				Text = "Pick Language",
+				Command = new Command(async () =>
+				{
+					var items = CrossTextToSpeech.Current.GetInstalledLanguages();
+					var result = await MainPage.DisplayActionSheet("Pick", "OK", null, items.Select(i => i.DisplayName).ToArray());
+					lang = items.FirstOrDefault(i => i.DisplayName == result);
+					language.Text = (result == "OK" || string.IsNullOrEmpty(result)) ? "Default" : result; 
+				})
+			};
+
+
             var content = new ContentPage
             {
                 Title = "Samples",
@@ -86,7 +108,9 @@ namespace Samples
                     Children = {
                         btn,
                         queueBtn,
-                        lbl
+                        lbl,
+						language,
+						pickLanguage
                     }
                 }
             };

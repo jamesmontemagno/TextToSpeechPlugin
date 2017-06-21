@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Plugin.TextToSpeech;
+using Plugin.TextToSpeech.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -58,7 +61,12 @@ namespace Samples.UWP
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                Xamarin.Forms.Forms.Init(e);
+				List<Assembly> assembliesToInclude = new List<Assembly>();
+
+				//Now, add in all the assemblies your app uses
+				assembliesToInclude.Add(typeof(ITextToSpeech).GetTypeInfo().Assembly);
+				assembliesToInclude.Add(typeof(TextToSpeech).GetTypeInfo().Assembly);
+				Xamarin.Forms.Forms.Init(e, assembliesToInclude);
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
