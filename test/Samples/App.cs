@@ -91,7 +91,7 @@ namespace Samples
 				Text = "Pick Language",
 				Command = new Command(async () =>
 				{
-					var items = CrossTextToSpeech.Current.GetInstalledLanguages();
+					var items = await CrossTextToSpeech.Current.GetInstalledLanguages();
 					var result = await MainPage.DisplayActionSheet("Pick", "OK", null, items.Select(i => i.DisplayName).ToArray());
 					lang = items.FirstOrDefault(i => i.DisplayName == result);
 					language.Text = (result == "OK" || string.IsNullOrEmpty(result)) ? "Default" : result; 

@@ -83,11 +83,11 @@ namespace Plugin.TextToSpeech
         /// Get a list of all installed languages
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<CrossLocale> GetInstalledLanguages() => 
-			NSSpeechSynthesizer
+        public Task<IEnumerable<CrossLocale>> GetInstalledLanguages() => 
+			Task.FromResult(NSSpeechSynthesizer
                 .AvailableVoices
                 .OrderBy(x => x)
-                .Select(x => new CrossLocale { Language = x, DisplayName = x });
+                .Select(x => new CrossLocale { Language = x, DisplayName = x }));
         
                 /// <summary>
         /// Gets the max string length of the speech engine

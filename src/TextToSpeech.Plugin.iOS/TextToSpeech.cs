@@ -61,10 +61,10 @@ namespace Plugin.TextToSpeech
         /// Get all installed and valid languages
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<CrossLocale> GetInstalledLanguages() =>
-			AVSpeechSynthesisVoice.GetSpeechVoices()
+        public Task<IEnumerable<CrossLocale>> GetInstalledLanguages() =>
+			Task.FromResult(AVSpeechSynthesisVoice.GetSpeechVoices()
               .OrderBy(a => a.Language)
-              .Select(a => new CrossLocale { Language = a.Language, DisplayName = a.Language });
+              .Select(a => new CrossLocale { Language = a.Language, DisplayName = a.Language }));
         
 
         private AVSpeechUtterance GetSpeechUtterance(string text, CrossLocale? crossLocale, float? pitch, float? speakRate, float? volume)

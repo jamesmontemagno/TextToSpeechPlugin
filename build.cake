@@ -56,15 +56,9 @@ Task("Libraries").Does(()=>
     BuildAction(libraries);
 });
 
-Task("Samples")
-    .IsDependentOn("Libraries")
-    .Does(()=>
-{
-    
-});
 
 Task ("NuGet")
-	.IsDependentOn ("Samples")
+	.IsDependentOn ("Libraries")
 	.Does (() =>
 {
     if(!DirectoryExists("./Build/nuget/"))
@@ -79,16 +73,9 @@ Task ("NuGet")
 	});	
 });
 
-Task("Component")
-    .IsDependentOn("Samples")
-    .IsDependentOn("NuGet")
-    .Does(()=>
-{
-	
-});
 
 //Build the component, which build samples, nugets, and libraries
-Task ("Default").IsDependentOn("Component");
+Task ("Default").IsDependentOn("NuGet");
 
 
 Task ("Clean").Does (() => 

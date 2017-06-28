@@ -28,7 +28,7 @@ namespace Plugin.TextToSpeech.Abstractions
 		/// Get avalid list of installed languages for TTS
 		/// </summary>
 		/// <returns></returns>
-		IEnumerable<CrossLocale> GetInstalledLanguages();
+		Task<IEnumerable<CrossLocale>> GetInstalledLanguages();
 
         /// <summary>
         /// Gets the max string length of the speech engine

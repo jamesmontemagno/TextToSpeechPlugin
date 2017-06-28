@@ -62,7 +62,7 @@ You can query a list of current support CrossLocales on the device:
 /// Get all installed and valide lanaguages
 /// </summary>
 /// <returns>List of CrossLocales</returns>
-public IEnumerable<CrossLocale> GetInstalledLanguages()
+public Task<IEnumerable<CrossLocale>> GetInstalledLanguages()
 ```
 
 Each local has the Language and Display Name. The Country code is only used in Android. If you pass in null to Speak it will use the default.

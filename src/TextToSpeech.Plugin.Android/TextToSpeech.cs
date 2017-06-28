@@ -30,13 +30,13 @@ namespace Plugin.TextToSpeech
             if (initialized)
                 return Task.FromResult(true);
 
-            this.initTcs = new TaskCompletionSource<bool>();
+            initTcs = new TaskCompletionSource<bool>();
 
             Console.WriteLine("Current version: " + (int)global::Android.OS.Build.VERSION.SdkInt);
             Android.Util.Log.Info("CrossTTS", "Current version: " + (int)global::Android.OS.Build.VERSION.SdkInt);
             textToSpeech = new Android.Speech.Tts.TextToSpeech(Application.Context, this);
 
-            return this.initTcs.Task;
+            return initTcs.Task;
         }
 
 
@@ -49,12 +49,12 @@ namespace Plugin.TextToSpeech
         {
             if (status.Equals(OperationResult.Success))
             {
-                this.initTcs.TrySetResult(true);
-                this.initialized = true;
+                initTcs.TrySetResult(true);
+                initialized = true;
             }
             else
             {
-                this.initTcs.TrySetException(new ArgumentException("Failed to initialize TTS engine"));
+                initTcs.TrySetException(new ArgumentException("Failed to initialize TTS engine"));
             }
         }
         #endregion
@@ -82,7 +82,7 @@ namespace Plugin.TextToSpeech
             {
                 await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
                 this.text = text;
-                this.language = crossLocale;
+				language = crossLocale;
                 this.pitch = pitch == null ? 1.0f : pitch.Value;
                 this.speakRate = speakRate == null ? 1.0f : speakRate.Value;
 
@@ -189,8 +189,9 @@ namespace Plugin.TextToSpeech
         /// Get all installed and valide lanaguages
         /// </summary>
         /// <returns>List of CrossLocales</returns>
-        public IEnumerable<CrossLocale> GetInstalledLanguages()
+        public async Task<IEnumerable<CrossLocale>> GetInstalledLanguages()
         {
+			await Init();
             if (textToSpeech != null && initialized)
             {
                 var version = (int)global::Android.OS.Build.VERSION.SdkInt;

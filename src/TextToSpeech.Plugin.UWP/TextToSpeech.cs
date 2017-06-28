@@ -7,6 +7,7 @@ using Windows.Foundation;
 using Windows.Media.SpeechSynthesis;
 using System.Diagnostics;
 using Windows.Media.Playback;
+using System.Collections.Generic;
 
 namespace Plugin.TextToSpeech
 {
@@ -159,12 +160,12 @@ namespace Plugin.TextToSpeech
         /// Get all installed and valid languages
         /// </summary>
         /// <returns></returns>
-        public System.Collections.Generic.IEnumerable<CrossLocale> GetInstalledLanguages() =>
-			SpeechSynthesizer.AllVoices
+        public Task<IEnumerable<CrossLocale>> GetInstalledLanguages() =>
+			Task.FromResult(SpeechSynthesizer.AllVoices
               .OrderBy(a => a.Language)
               .Select(a => new CrossLocale { Language = a.Language, DisplayName = a.DisplayName })
               .GroupBy(c => c.ToString())
-              .Select(g => g.First());
+              .Select(g => g.First()));
 
 
         /// <summary>
