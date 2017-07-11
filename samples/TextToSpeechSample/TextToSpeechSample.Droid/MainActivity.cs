@@ -17,8 +17,7 @@ namespace TextToSpeechSample.Droid
       base.OnCreate(bundle);
 
       global::Xamarin.Forms.Forms.Init(this, bundle);
-      //Not required, but recommended
-      Refractored.Xam.TTS.CrossTextToSpeech.Current.Init();
+      
       LoadApplication(new App());
     }
   }
