@@ -73,27 +73,18 @@ namespace Plugin.TextToSpeech
 
             var voice = GetVoiceForLocaleLanguage(crossLocale);
 
-            if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
-            {
-				speechUtterance = new AVSpeechUtterance(text)
-				{
-					Voice = voice
-				};
-			}
-            else
-            {
-                speakRate = NormalizeSpeakRate(speakRate);
-                volume = NormalizeVolume(volume);
-                pitch = NormalizePitch(pitch);
+			speakRate = NormalizeSpeakRate(speakRate);
+			volume = NormalizeVolume(volume);
+			pitch = NormalizePitch(pitch);
 
-                speechUtterance = new AVSpeechUtterance(text)
-                {
-                    Rate = speakRate.Value,
-                    Voice = voice,
-                    Volume = volume.Value,
-                    PitchMultiplier = pitch.Value
-                };
-            }
+			speechUtterance = new AVSpeechUtterance(text)
+			{
+				Rate = speakRate.Value,
+				Voice = voice,
+				Volume = volume.Value,
+				PitchMultiplier = pitch.Value
+			};
+            
 
             return speechUtterance;
         }
