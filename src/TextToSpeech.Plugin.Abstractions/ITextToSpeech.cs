@@ -22,7 +22,7 @@ namespace Plugin.TextToSpeech.Abstractions
         /// <param name="cancelToken">Canelation token to stop speak</param> 
         /// <exception cref="ArgumentNullException">Thrown if text is null</exception>
         /// <exception cref="ArgumentException">Thrown if text length is greater than maximum allowed</exception>
-        Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null);
+        Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken cancelToken = default(CancellationToken));
 
 		/// <summary>
 		/// Get avalid list of installed languages for TTS
