@@ -70,7 +70,7 @@ namespace Plugin.TextToSpeech
         /// <param name="cancelToken">Canelation token to stop speak</param>
         /// <exception cref="ArgumentNullException">Thrown if text is null</exception>
         /// <exception cref="ArgumentException">Thrown if text length is greater than maximum allowed</exception>
-        public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken? cancelToken = null)
+        public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken cancelToken = default(CancellationToken))
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text), "Text can not be null");
@@ -80,7 +80,7 @@ namespace Plugin.TextToSpeech
 
             try
             {
-                await semaphore.WaitAsync(cancelToken ?? CancellationToken.None);
+                await semaphore.WaitAsync(cancelToken);
                 this.text = text;
 				language = crossLocale;
                 this.pitch = pitch == null ? 1.0f : pitch.Value;
@@ -134,10 +134,10 @@ namespace Plugin.TextToSpeech
         }
 
 
-        Task Speak(CancellationToken? cancelToken)
+        async Task Speak(CancellationToken cancelToken)
         {
             if (string.IsNullOrWhiteSpace(text))
-                return Task.CompletedTask;
+                return;
 
             if (language.HasValue && !string.IsNullOrWhiteSpace(language.Value.Language))
             {
@@ -164,11 +164,7 @@ namespace Plugin.TextToSpeech
             }
 
             var tcs = new TaskCompletionSource<object>();
-            cancelToken?.Register(() =>
-            {
-                textToSpeech.Stop();
-                tcs.TrySetCanceled();
-            });
+
             textToSpeech.SetPitch(pitch);
             textToSpeech.SetSpeechRate(speakRate);
             textToSpeech.SetOnUtteranceProgressListener(new TtsProgressListener(tcs));
@@ -182,7 +178,17 @@ namespace Plugin.TextToSpeech
 			textToSpeech.Speak(text, QueueMode.Flush, map);
 #pragma warning restore CS0618 // Type or member is obsolete
 
-			return tcs.Task;
+
+			void OnCancel()
+			{
+				textToSpeech.Stop();
+				tcs.TrySetCanceled();
+			}
+
+			using (cancelToken.Register(OnCancel))
+			{
+				await tcs.Task;
+			}
         }
 
         /// <summary>
