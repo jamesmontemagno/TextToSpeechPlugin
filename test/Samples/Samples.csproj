@@ -14,4 +14,8 @@
       <ProjectReference Include="..\..\src\TextToSpeech.Plugin\TextToSpeech.Plugin.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Properties\" />
+    </ItemGroup>
+
 </Project>

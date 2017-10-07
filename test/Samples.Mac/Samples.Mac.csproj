@@ -104,6 +104,10 @@
       <Name>TextToSpeech.Plugin.Mac</Name>
       <IsAppExtension>false</IsAppExtension>
     </ProjectReference>
+    <ProjectReference Include="..\Samples\Samples.csproj">
+      <Project>{64bce686-4ef2-494e-8fce-ef7393293a2f}</Project>
+      <Name>Samples</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms">
