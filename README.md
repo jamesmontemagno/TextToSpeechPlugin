@@ -1,6 +1,6 @@
 ## Text To Speech Plugin for Xamarin and Windows
 
-Simple and elegant way of performing Text To Speech across Xamarin.iOS, Xamarin.Android, Windows, and Xamarin.Forms projects.
+Simple and elegant way of performing Text To Speech across Xamarin.iOS, Xamarin.tvOS, Xamarin.macOS Xamarin.Android, Windows, and Xamarin.Forms projects.
 
 Preview: http://screencast.com/t/voW1P48Ka
 
@@ -21,7 +21,7 @@ Build status:
 |Xamarin.Android|API 10+|
 |Windows 10 UWP|10+|
 |Xamarin.Mac|All|
-
+|Xamarin tvOS|All|
 
 ### Features
 * Speak back text
