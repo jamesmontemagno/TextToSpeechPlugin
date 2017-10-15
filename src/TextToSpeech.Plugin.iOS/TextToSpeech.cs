@@ -53,7 +53,8 @@ namespace Plugin.TextToSpeech
             }
             finally
             {
-                semaphore.Release();
+                if (!cancelToken.IsCancellationRequested)
+                    semaphore.Release();
             }
         }
 

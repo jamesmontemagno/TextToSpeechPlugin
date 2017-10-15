@@ -74,8 +74,9 @@ namespace Plugin.TextToSpeech
             }
             finally 
             {
-                semaphore.Release();
                 sdelegate.FinishedSpeaking -= handler;
+                if (!cancelToken.IsCancellationRequested)
+                    semaphore.Release();
             }
         }
 
