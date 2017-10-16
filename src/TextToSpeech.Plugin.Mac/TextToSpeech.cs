@@ -75,7 +75,7 @@ namespace Plugin.TextToSpeech
             finally
             {
                 sdelegate.FinishedSpeaking -= handler;
-                if (!semaphore.CurrentCount == 0)
+                if (semaphore.CurrentCount == 0)
                     semaphore.Release();
             }
         }
@@ -92,7 +92,7 @@ namespace Plugin.TextToSpeech
 
                 /// <summary>
         /// Gets the max string length of the speech engine
-        /// -1 means no limit
+        /// -1 meansno limit
         /// </summary>
         public int MaxSpeechInputLength => -1;
 
