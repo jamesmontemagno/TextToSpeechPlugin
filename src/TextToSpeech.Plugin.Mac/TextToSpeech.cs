@@ -35,7 +35,7 @@ namespace Plugin.TextToSpeech
         /// <param name="pitch">Pitch of voice</param>
         /// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
         /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
-        /// <param name="cancelToken">Canelation token to stop speak</param> 
+        /// <param name="cancelToken">Canelation token to stop speak</param>
         /// <exception cref="ArgumentNullException">Thrown if text is null</exception>
         /// <exception cref="ArgumentException">Thrown if text length is greater than maximum allowed</exception>
         public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken cancelToken = default(CancellationToken))
@@ -72,10 +72,11 @@ namespace Plugin.TextToSpeech
                     await tcs.Task;
                 }
             }
-            finally 
+            finally
             {
-                semaphore.Release();
                 sdelegate.FinishedSpeaking -= handler;
+                if (semaphore.CurrentCount == 0)
+                    semaphore.Release();
             }
         }
 
@@ -83,15 +84,15 @@ namespace Plugin.TextToSpeech
         /// Get a list of all installed languages
         /// </summary>
         /// <returns></returns>
-        public Task<IEnumerable<CrossLocale>> GetInstalledLanguages() => 
+        public Task<IEnumerable<CrossLocale>> GetInstalledLanguages() =>
 			Task.FromResult(NSSpeechSynthesizer
                 .AvailableVoices
                 .OrderBy(x => x)
                 .Select(x => new CrossLocale { Language = x, DisplayName = x }));
-        
+
                 /// <summary>
         /// Gets the max string length of the speech engine
-        /// -1 means no limit
+        /// -1 meansno limit
         /// </summary>
         public int MaxSpeechInputLength => -1;
 

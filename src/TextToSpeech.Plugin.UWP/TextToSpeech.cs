@@ -24,7 +24,7 @@ namespace Plugin.TextToSpeech
         /// SpeechSynthesizer
         /// </summary>
         public TextToSpeech() => speechSynthesizer = new SpeechSynthesizer();
-        
+
 
         /// <summary>
         /// Speak back text
@@ -34,14 +34,14 @@ namespace Plugin.TextToSpeech
         /// <param name="pitch">Pitch of voice</param>
         /// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
         /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
-        /// <param name="cancelToken">Canelation token to stop speak</param> 
+        /// <param name="cancelToken">Canelation token to stop speak</param>
         /// <exception cref="ArgumentNullException">Thrown if text is null</exception>
         /// <exception cref="ArgumentException">Thrown if text length is greater than maximum allowed</exception>
         public async Task Speak(string text, CrossLocale? crossLocale = null, float? pitch = null, float? speakRate = null, float? volume = null, CancellationToken cancelToken = default(CancellationToken))
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text), "Text can not be null");
-            
+
             try
             {
                 await semaphore.WaitAsync(cancelToken);
@@ -155,7 +155,8 @@ namespace Plugin.TextToSpeech
             }
             finally
             {
-                semaphore.Release();
+	            if (semaphore.CurrentCount == 0)
+                    semaphore.Release();
             }
 
         }

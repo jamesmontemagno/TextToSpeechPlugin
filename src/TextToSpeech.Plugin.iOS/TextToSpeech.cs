@@ -53,8 +53,8 @@ namespace Plugin.TextToSpeech
             }
             finally
             {
-				if (semaphore.CurrentCount == 0)
-					semaphore.Release();
+	            if (semaphore.CurrentCount == 0)
+                    semaphore.Release();
             }
         }
 
