@@ -92,7 +92,7 @@ namespace Plugin.TextToSpeech
             }
             finally
             {
-                if (!cancelToken.IsCancellationRequested)
+                if (semaphore.CurrentCount == 0)
                     semaphore.Release();
             }
         }
@@ -100,7 +100,7 @@ namespace Plugin.TextToSpeech
 
         private void SetDefaultLanguage() => SetDefaultLanguageNonLollipop();
 
-        
+
         private void SetDefaultLanguageNonLollipop()
         {
             //disable warning because we are checking ahead of time.
