@@ -25,26 +25,39 @@ namespace Samples
 
             queueBtn.Command = new Command(async () =>
             {
-                queueBtn.IsEnabled = false;
-                try
-                {
-
-                    await Task.WhenAll(
-                        CrossTextToSpeech.Current.Speak("Queue 1", lang),
-                        CrossTextToSpeech.Current.Speak("Queue 2", lang),
-                        CrossTextToSpeech.Current.Speak("Queue 3", lang),
-                        CrossTextToSpeech.Current.Speak("Queue 4", lang),
-                        CrossTextToSpeech.Current.Speak("Queue 5", lang)
-                    );
-                }
-                catch (Exception ex)
-                {
-                    lbl.Text = ex.ToString();
-                }
-                finally
-                {
-                    queueBtn.IsEnabled = true;
-                }
+	            lbl.Text = "";
+	            try
+	            {
+		            if (cancelSrc == null)
+		            {
+			            queueBtn.Text = "Cancel Test Queue";
+			            cancelSrc = new CancellationTokenSource();
+			            await Task.WhenAll(
+				            CrossTextToSpeech.Current.Speak("Queue 1", lang, cancelToken: cancelSrc.Token),
+				            CrossTextToSpeech.Current.Speak("Queue 2", lang, cancelToken: cancelSrc.Token),
+				            CrossTextToSpeech.Current.Speak("Queue 3", lang, cancelToken: cancelSrc.Token),
+				            CrossTextToSpeech.Current.Speak("Queue 4", lang, cancelToken: cancelSrc.Token),
+				            CrossTextToSpeech.Current.Speak("Queue 5", lang, cancelToken: cancelSrc.Token)
+			            );
+		            }
+		            else
+		            {
+			            cancelSrc.Cancel();
+		            }
+	            }
+	            catch (OperationCanceledException)
+	            {
+		            lbl.Text = "You cancelled it";
+	            }
+	            catch (Exception ex)
+	            {
+		            lbl.Text = ex.ToString();
+	            }
+	            finally
+	            {
+		            queueBtn.Text = "Test Queue";
+		            cancelSrc = null;
+	            }
             });
             btn.Command = new Command(async () =>
             {
@@ -55,13 +68,12 @@ namespace Samples
                     if (cancelSrc == null)
                     {
                         cancelSrc = new CancellationTokenSource();
-                        await CrossTextToSpeech.Current.Speak(MSG, crossLocale: lang, cancelToken: cancelSrc.Token);
+                        await CrossTextToSpeech.Current.Speak(MSG, lang, cancelToken: cancelSrc.Token);
                         cancelSrc = null;
                     }
                     else
                     {
                         cancelSrc.Cancel();
-                        cancelSrc = null;
                     }
                 }
                 catch (OperationCanceledException)
@@ -94,7 +106,7 @@ namespace Samples
 					var items = await CrossTextToSpeech.Current.GetInstalledLanguages();
 					var result = await MainPage.DisplayActionSheet("Pick", "OK", null, items.Select(i => i.DisplayName).ToArray());
 					lang = items.FirstOrDefault(i => i.DisplayName == result);
-					language.Text = (result == "OK" || string.IsNullOrEmpty(result)) ? "Default" : result; 
+					language.Text = (result == "OK" || string.IsNullOrEmpty(result)) ? "Default" : result;
 				})
 			};
 
