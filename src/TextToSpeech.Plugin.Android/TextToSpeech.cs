@@ -92,14 +92,15 @@ namespace Plugin.TextToSpeech
             }
             finally
             {
-                semaphore.Release();
+                if (semaphore.CurrentCount == 0)
+                    semaphore.Release();
             }
         }
 
 
         private void SetDefaultLanguage() => SetDefaultLanguageNonLollipop();
 
-        
+
         private void SetDefaultLanguageNonLollipop()
         {
             //disable warning because we are checking ahead of time.
