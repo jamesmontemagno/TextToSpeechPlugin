@@ -53,7 +53,8 @@ namespace Plugin.TextToSpeech
             }
             finally
             {
-                semaphore.Release();
+				if (!cancelToken.IsCancellationRequested)
+					semaphore.Release();
             }
         }
 
@@ -65,7 +66,7 @@ namespace Plugin.TextToSpeech
 			Task.FromResult(AVSpeechSynthesisVoice.GetSpeechVoices()
               .OrderBy(a => a.Language)
               .Select(a => new CrossLocale { Language = a.Language, DisplayName = a.Language }));
-        
+
 
         private AVSpeechUtterance GetSpeechUtterance(string text, CrossLocale? crossLocale, float? pitch, float? speakRate, float? volume)
         {
@@ -84,7 +85,7 @@ namespace Plugin.TextToSpeech
 				Volume = volume.Value,
 				PitchMultiplier = pitch.Value
 			};
-            
+
 
             return speechUtterance;
         }
@@ -140,7 +141,7 @@ namespace Plugin.TextToSpeech
 
         private static float? NormalizePitch(float? pitch) =>
 			pitch.GetValueOrDefault(1.0f);
-        
+
 
 
         TaskCompletionSource<object> currentSpeak;
@@ -166,7 +167,7 @@ namespace Plugin.TextToSpeech
 
         void OnFinishedSpeechUtterance(object sender, AVSpeechSynthesizerUteranceEventArgs args) =>
 			currentSpeak?.TrySetResult(null);
-        
+
 
 
         void TryCancel()
@@ -185,6 +186,6 @@ namespace Plugin.TextToSpeech
         /// Dispose of TTS
         /// </summary>
         public void Dispose() =>  speechSynthesizer?.Dispose();
-        
+
     }
 }
