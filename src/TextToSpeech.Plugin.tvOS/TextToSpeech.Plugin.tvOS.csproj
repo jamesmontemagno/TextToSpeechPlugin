@@ -39,13 +39,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
-      <Project>{9c9ab2ed-771b-4138-8c05-63779584eea3}</Project>
+      <Project>{A9A66F86-2187-4272-AEB7-3FD72F341D87}</Project>
       <Name>TextToSpeech.Plugin.Abstractions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\TextToSpeech.Plugin.iOS\TextToSpeech.cs">
       <Link>TextToSpeech.cs</Link>
+    </Compile>
+    <Compile Include="..\TextToSpeech.Plugin\CrossTextToSpeech.cs">
+      <Link>CrossTextToSpeech.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="..\TextToSpeech.Plugin.Shared\TextToSpeech.Plugin.Shared.projitems" Label="Shared" />
