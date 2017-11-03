@@ -277,6 +277,7 @@ namespace Plugin.TextToSpeech
             textToSpeech?.Stop();
             textToSpeech?.Dispose();
             textToSpeech = null;
+			initialized = false;
         }
     }
 }
