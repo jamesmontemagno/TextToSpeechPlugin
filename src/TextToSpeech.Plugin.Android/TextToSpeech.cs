@@ -103,6 +103,8 @@ namespace Plugin.TextToSpeech
 
         private void SetDefaultLanguageNonLollipop()
         {
+			if(textToSpeech == null)
+				return;
             //disable warning because we are checking ahead of time.
 #pragma warning disable 0618
             var sdk = (int)global::Android.OS.Build.VERSION.SdkInt;
