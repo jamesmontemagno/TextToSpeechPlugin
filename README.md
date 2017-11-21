@@ -22,6 +22,7 @@ Build status:
 |Windows 10 UWP|10+|
 |Xamarin.Mac|All|
 |Xamarin tvOS|All|
+|Tizen|4.0+|
 
 ### Features
 * Speak back text
@@ -72,6 +73,7 @@ Each local has the Language and Display Name. The Country code is only used in A
 * iOS: AVSpeechSynthesizer
 * Android: Android.Speech.Tts.TextToSpeech
 * Windows: SpeechSynthesizer + Ssml support for advanced playback
+* Tizen: Tizen.Uix.Tts.TtsClient
 
 
 **Windows Phone**

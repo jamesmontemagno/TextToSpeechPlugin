@@ -49,6 +49,8 @@
       </group>
       <group targetFramework="xamarinwatchos">
       </group>
+      <group targetFramework="tizen40">
+      </group>
     </dependencies>
   </metadata>
   <files>
@@ -69,6 +71,9 @@
 
     <!--UWP-->
     <file src="src\TextToSpeech.Plugin.UWP\bin\Release\Plugin.TextToSpeech.*" target="lib\UAP10" />
+
+    <!--Tizen-->
+    <file src="src\TextToSpeech.Plugin.Tizen\bin\Release\tizen40\Plugin.TextToSpeech.*" target="lib\tizen40" />
 
   </files>
 </package>
