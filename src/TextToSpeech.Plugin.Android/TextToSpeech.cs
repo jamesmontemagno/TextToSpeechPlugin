@@ -15,6 +15,7 @@ namespace Plugin.TextToSpeech
     /// </summary>
     public class TextToSpeech : Java.Lang.Object, ITextToSpeech, Android.Speech.Tts.TextToSpeech.IOnInitListener, IDisposable
     {
+        const int DefaultMaxSpeechLength = 4000;
         readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
         Android.Speech.Tts.TextToSpeech textToSpeech;
         string text;
@@ -272,7 +273,7 @@ namespace Plugin.TextToSpeech
         /// -1 means no limit
         /// </summary>
         public int MaxSpeechInputLength =>
-            Android.Speech.Tts.TextToSpeech.MaxSpeechInputLength;
+            (int)Android.OS.Build.VERSION.SdkInt < 18 ? DefaultMaxSpeechLength : Android.Speech.Tts.TextToSpeech.MaxSpeechInputLength;
 
         void IDisposable.Dispose()
         {
