@@ -12,7 +12,7 @@ namespace Samples
     public class App : Application
     {
         CancellationTokenSource cancelSrc;
-        const string MSG = "This is a test of the emergency broadcast system.  Had this had been an actual emergency, I'm sure something else important would have happened";
+        const string MSG = "The quick brown fox jumped over the lazy dog.";
 
 		CrossLocale? lang = null;
 
@@ -23,7 +23,10 @@ namespace Samples
             var queueBtn = new Button { Text = "Test Queue" };
             var lbl = new Label { TextColor = Color.Red };
 
-            queueBtn.Command = new Command(async () =>
+			var volumeSlider = new Xamarin.Forms.Slider(0, 1, 1);
+
+
+			queueBtn.Command = new Command(async () =>
             {
 	            lbl.Text = "";
 	            try
@@ -33,11 +36,11 @@ namespace Samples
 			            queueBtn.Text = "Cancel Test Queue";
 			            cancelSrc = new CancellationTokenSource();
 			            await Task.WhenAll(
-				            CrossTextToSpeech.Current.Speak("Queue 1", lang, cancelToken: cancelSrc.Token),
-				            CrossTextToSpeech.Current.Speak("Queue 2", lang, cancelToken: cancelSrc.Token),
-				            CrossTextToSpeech.Current.Speak("Queue 3", lang, cancelToken: cancelSrc.Token),
-				            CrossTextToSpeech.Current.Speak("Queue 4", lang, cancelToken: cancelSrc.Token),
-				            CrossTextToSpeech.Current.Speak("Queue 5", lang, cancelToken: cancelSrc.Token)
+				            CrossTextToSpeech.Current.Speak("Queue 1", lang, volume: (float)volumeSlider.Value, cancelToken: cancelSrc.Token),
+				            CrossTextToSpeech.Current.Speak("Queue 2", lang, volume: (float)volumeSlider.Value, cancelToken: cancelSrc.Token),
+				            CrossTextToSpeech.Current.Speak("Queue 3", lang, volume: (float)volumeSlider.Value, cancelToken: cancelSrc.Token),
+				            CrossTextToSpeech.Current.Speak("Queue 4", lang, volume: (float)volumeSlider.Value, cancelToken: cancelSrc.Token),
+				            CrossTextToSpeech.Current.Speak("Queue 5", lang, volume: (float)volumeSlider.Value, cancelToken: cancelSrc.Token)
 			            );
 		            }
 		            else
@@ -59,7 +62,10 @@ namespace Samples
 		            cancelSrc = null;
 	            }
             });
-            btn.Command = new Command(async () =>
+
+
+
+			btn.Command = new Command(async () =>
             {
                 lbl.Text = string.Empty;
                 btn.Text = "Cancel Speech";
@@ -68,7 +74,7 @@ namespace Samples
                     if (cancelSrc == null)
                     {
                         cancelSrc = new CancellationTokenSource();
-                        await CrossTextToSpeech.Current.Speak(MSG, lang, cancelToken: cancelSrc.Token);
+                        await CrossTextToSpeech.Current.Speak(MSG, lang, volume: (float)volumeSlider.Value, cancelToken: cancelSrc.Token);
                         cancelSrc = null;
                     }
                     else
@@ -98,6 +104,8 @@ namespace Samples
 				Text = "Default language"
 			};
 
+			
+
 			var pickLanguage = new Button
 			{
 				Text = "Pick Language",
@@ -122,8 +130,10 @@ namespace Samples
                         queueBtn,
                         lbl,
 						language,
-						pickLanguage
-                    }
+						pickLanguage,
+						new Label{Text = "volume"},
+						volumeSlider
+					}
                 }
             };
 

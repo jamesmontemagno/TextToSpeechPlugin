@@ -7,6 +7,8 @@ using Plugin.TextToSpeech.Abstractions;
 using Java.Util;
 using Android.Speech.Tts;
 using Android.App;
+using Android.Media;
+using Android.Content;
 
 namespace Plugin.TextToSpeech
 {
@@ -67,7 +69,7 @@ namespace Plugin.TextToSpeech
         /// <param name="crossLocale">Locale of voice</param>
         /// <param name="pitch">Pitch of voice</param>
         /// <param name="speakRate">Speak Rate of voice (All) (0.0 - 2.0f)</param>
-        /// <param name="volume">Volume of voice (iOS/WP) (0.0-1.0)</param>
+        /// <param name="volume">Volume of voice (0.0-1.0)</param>
         /// <param name="cancelToken">Canelation token to stop speak</param>
         /// <exception cref="ArgumentNullException">Thrown if text is null</exception>
         /// <exception cref="ArgumentException">Thrown if text length is greater than maximum allowed</exception>
@@ -87,6 +89,8 @@ namespace Plugin.TextToSpeech
                 this.pitch = pitch == null ? 1.0f : pitch.Value;
                 this.speakRate = speakRate == null ? 1.0f : speakRate.Value;
 
+				SetVolume(volume);
+
                 // TODO: need to wait lock so not to break people using queuing mechanism
                 await Init();
                 await Speak(cancelToken);
@@ -97,6 +101,35 @@ namespace Plugin.TextToSpeech
                     semaphore.Release();
             }
         }
+
+		void SetVolume(float? volume)
+		{
+			try
+			{
+
+				var am = Application.Context.GetSystemService(Context.AudioService) as AudioManager;
+				if (am == null)
+					return;
+				//get a percentage
+				if (!volume.HasValue)
+					volume = 1.0f;
+				else if (volume.Value > 1.0f)
+					volume = 1.0f;
+				else if (volume.Value < 0.0f)
+					volume = 0.0f;
+
+				
+
+				var amStreamMusicMaxVol = am.GetStreamMaxVolume(Stream.Music);
+				var finalVol = (float)amStreamMusicMaxVol * volume.Value;
+
+				am.SetStreamVolume(Stream.Music, (int)finalVol, 0);
+			}
+			catch(Exception ex)
+			{
+				Console.Write("Unable to adjust audio volume: " + ex);
+			}
+		}
 
 
         private void SetDefaultLanguage() => SetDefaultLanguageNonLollipop();
@@ -171,6 +204,7 @@ namespace Plugin.TextToSpeech
 
             textToSpeech.SetPitch(pitch);
             textToSpeech.SetSpeechRate(speakRate);
+			
             textToSpeech.SetOnUtteranceProgressListener(new TtsProgressListener(tcs));
 #pragma warning disable CS0618 // Type or member is obsolete
 
