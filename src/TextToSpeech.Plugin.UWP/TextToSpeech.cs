@@ -128,7 +128,7 @@ namespace Plugin.TextToSpeech
                 try
                 {
                     var player = BackgroundMediaPlayer.Current;
-                    var stream = await speechSynthesizer.SynthesizeTextToStreamAsync(text);
+                    var stream = await speechSynthesizer.SynthesizeSsmlToStreamAsync(ssmlText);
 
                     player.MediaEnded += handler;
                     player.SetStreamSource(stream);
