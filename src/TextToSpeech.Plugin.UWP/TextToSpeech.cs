@@ -116,19 +116,18 @@ namespace Plugin.TextToSpeech
                     pitchProsody = "x-low";
 
 
-                string ssmlText = "<speak version=\"1.0\" ";
-                ssmlText += "xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"" + localCode + "\">";
-                ssmlText += "<prosody pitch=\"" + pitchProsody + "\" volume=\"" + volume.Value + "\" rate=\"" +
-                            speakRate ?? 1F + "\" >" + text + "</prosody>";
-                ssmlText += "</speak>";
+				var ssml = @"<speak version='1.0' " +
+						$"xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='{localCode}'>" +
+						$"<prosody pitch='{pitchProsody}' volume='{volume.Value}' rate='{speakRate ?? 1F}'>{text}</prosody> " +
+						"</speak>";
 
-                var tcs = new TaskCompletionSource<object>();
+				var tcs = new TaskCompletionSource<object>();
                 var handler = new TypedEventHandler<MediaPlayer, object>((sender, args) => tcs.TrySetResult(null));
 
                 try
                 {
                     var player = BackgroundMediaPlayer.Current;
-                    var stream = await speechSynthesizer.SynthesizeSsmlToStreamAsync(ssmlText);
+                    var stream = await speechSynthesizer.SynthesizeSsmlToStreamAsync(ssml);
 
                     player.MediaEnded += handler;
                     player.SetStreamSource(stream);

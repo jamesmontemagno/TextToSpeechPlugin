@@ -64,8 +64,8 @@ namespace Samples.UWP
 				List<Assembly> assembliesToInclude = new List<Assembly>();
 
 				//Now, add in all the assemblies your app uses
-				assembliesToInclude.Add(typeof(ITextToSpeech).GetTypeInfo().Assembly);
-				assembliesToInclude.Add(typeof(TextToSpeech).GetTypeInfo().Assembly);
+				//assembliesToInclude.Add(typeof(ITextToSpeech).GetTypeInfo().Assembly);
+				//assembliesToInclude.Add(typeof(TextToSpeech).GetTypeInfo().Assembly);
 				Xamarin.Forms.Forms.Init(e, assembliesToInclude);
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
