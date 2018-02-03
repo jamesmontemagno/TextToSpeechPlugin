@@ -91,14 +91,15 @@ namespace Plugin.TextToSpeech
                 }
 
 
-                if (!volume.HasValue)
-                    volume = 100.0f;
-                else if (volume.Value > 1.0f)
-                    volume = 100.0f;
-                else if (volume.Value < 0.0f)
-                    volume = 0.0f;
-                else
-                    volume = volume.Value * 100.0f;
+				if (volume.HasValue)
+				{ 
+					if (volume.Value > 1.0f)
+						volume = 100.0f;
+					else if (volume.Value < 0.0f)
+						volume = 0.0f;
+					else
+						volume = volume.Value * 100.0f;
+				}
 
                 var pitchProsody = "default";
                 //var test = "x-low", "low", "medium", "high", "x-high", or "default";
@@ -115,11 +116,24 @@ namespace Plugin.TextToSpeech
                 else
                     pitchProsody = "x-low";
 
+				var ssml = string.Empty;
 
-				var ssml = @"<speak version='1.0' " +
-						$"xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='{localCode}'>" +
-						$"<prosody pitch='{pitchProsody}' volume='{volume.Value}' rate='{speakRate ?? 1F}'>{text}</prosody> " +
-						"</speak>";
+				if(volume.HasValue)
+				{
+
+					ssml = @"<speak version='1.0' " +
+							$"xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='{localCode}'>" +
+							$"<prosody pitch='{pitchProsody}' volume='{volume.Value}' rate='{speakRate ?? 1F}'>{text}</prosody> " +
+							"</speak>";
+				}
+				else
+				{
+
+					ssml = @"<speak version='1.0' " +
+							$"xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='{localCode}'>" +
+							$"<prosody pitch='{pitchProsody}' rate='{speakRate ?? 1F}'>{text}</prosody> " +
+							"</speak>";
+				}
 
 				var tcs = new TaskCompletionSource<object>();
                 var handler = new TypedEventHandler<MediaPlayer, object>((sender, args) => tcs.TrySetResult(null));

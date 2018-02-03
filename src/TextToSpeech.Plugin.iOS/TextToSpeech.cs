@@ -75,19 +75,24 @@ namespace Plugin.TextToSpeech
             var voice = GetVoiceForLocaleLanguage(crossLocale);
 
 			speakRate = NormalizeSpeakRate(speakRate);
-			volume = NormalizeVolume(volume);
 			pitch = NormalizePitch(pitch);
 
 			speechUtterance = new AVSpeechUtterance(text)
 			{
 				Rate = speakRate.Value,
 				Voice = voice,
-				Volume = volume.Value,
 				PitchMultiplier = pitch.Value
 			};
 
 
-            return speechUtterance;
+			if (volume.HasValue)
+			{
+				volume = NormalizeVolume(volume);
+				speechUtterance.Volume = volume.Value;
+			}
+
+
+			return speechUtterance;
         }
 
         private AVSpeechSynthesisVoice GetVoiceForLocaleLanguage(CrossLocale? crossLocale)

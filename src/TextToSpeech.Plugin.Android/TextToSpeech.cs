@@ -9,6 +9,7 @@ using Android.Speech.Tts;
 using Android.App;
 using Android.Media;
 using Android.Content;
+using Android.OS;
 
 namespace Plugin.TextToSpeech
 {
@@ -23,6 +24,7 @@ namespace Plugin.TextToSpeech
         string text;
         CrossLocale? language;
         float pitch, speakRate;
+		float? volume;
         bool initialized;
 		int count;
 
@@ -62,6 +64,8 @@ namespace Plugin.TextToSpeech
         }
         #endregion
 
+
+
         /// <summary>
         /// Speak back text
         /// </summary>
@@ -88,12 +92,15 @@ namespace Plugin.TextToSpeech
 				language = crossLocale;
                 this.pitch = pitch == null ? 1.0f : pitch.Value;
                 this.speakRate = speakRate == null ? 1.0f : speakRate.Value;
+				this.volume = volume;
 
-				SetVolume(volume);
 
                 // TODO: need to wait lock so not to break people using queuing mechanism
                 await Init();
-                await Speak(cancelToken);
+				
+
+				await Speak(cancelToken);
+				
             }
             finally
             {
@@ -101,35 +108,6 @@ namespace Plugin.TextToSpeech
                     semaphore.Release();
             }
         }
-
-		void SetVolume(float? volume)
-		{
-			try
-			{
-
-				var am = Application.Context.GetSystemService(Context.AudioService) as AudioManager;
-				if (am == null)
-					return;
-				//get a percentage
-				if (!volume.HasValue)
-					volume = 1.0f;
-				else if (volume.Value > 1.0f)
-					volume = 1.0f;
-				else if (volume.Value < 0.0f)
-					volume = 0.0f;
-
-				
-
-				var amStreamMusicMaxVol = am.GetStreamMaxVolume(Stream.Music);
-				var finalVol = (float)amStreamMusicMaxVol * volume.Value;
-
-				am.SetStreamVolume(Stream.Music, (int)finalVol, 0);
-			}
-			catch(Exception ex)
-			{
-				Console.Write("Unable to adjust audio volume: " + ex);
-			}
-		}
 
 
         private void SetDefaultLanguage() => SetDefaultLanguageNonLollipop();
@@ -209,11 +187,26 @@ namespace Plugin.TextToSpeech
 #pragma warning disable CS0618 // Type or member is obsolete
 
 			count++;
-			var map = new Dictionary<string, string>
+			
+
+			if (volume.HasValue)
 			{
-				[Android.Speech.Tts.TextToSpeech.Engine.KeyParamUtteranceId] = count.ToString()
-			};
-			textToSpeech.Speak(text, QueueMode.Flush, map);
+				var b = new Bundle();
+				if (volume.Value > 1.0f)
+					volume = 1.0f;
+				else if (volume.Value < 0.0f)
+					volume = 0.0f;
+				b.PutFloat(key: "KEY_PARAM_VOLUME", value: volume.Value);
+				textToSpeech.Speak(text, QueueMode.Flush, b, count.ToString());
+			}
+			else
+			{
+				var map = new Dictionary<string, string>
+				{
+					[Android.Speech.Tts.TextToSpeech.Engine.KeyParamUtteranceId] = count.ToString()
+				};
+				textToSpeech.Speak(text, QueueMode.Flush, map);
+			}
 #pragma warning restore CS0618 // Type or member is obsolete
 
 

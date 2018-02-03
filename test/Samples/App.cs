@@ -25,6 +25,8 @@ namespace Samples
 
 			var volumeSlider = new Xamarin.Forms.Slider(0, 1, 1);
 
+			var volumeSwitch = new Switch();
+
 
 			queueBtn.Command = new Command(async () =>
             {
@@ -35,12 +37,16 @@ namespace Samples
 		            {
 			            queueBtn.Text = "Cancel Test Queue";
 			            cancelSrc = new CancellationTokenSource();
-			            await Task.WhenAll(
-				            CrossTextToSpeech.Current.Speak("Queue 1", lang, volume: (float)volumeSlider.Value, cancelToken: cancelSrc.Token),
-				            CrossTextToSpeech.Current.Speak("Queue 2", lang, volume: (float)volumeSlider.Value, cancelToken: cancelSrc.Token),
-				            CrossTextToSpeech.Current.Speak("Queue 3", lang, volume: (float)volumeSlider.Value, cancelToken: cancelSrc.Token),
-				            CrossTextToSpeech.Current.Speak("Queue 4", lang, volume: (float)volumeSlider.Value, cancelToken: cancelSrc.Token),
-				            CrossTextToSpeech.Current.Speak("Queue 5", lang, volume: (float)volumeSlider.Value, cancelToken: cancelSrc.Token)
+						float? vol = null;
+						if (volumeSwitch.IsToggled)
+							vol = (float)volumeSlider.Value;
+
+						await Task.WhenAll(
+				            CrossTextToSpeech.Current.Speak("Queue 1", lang, volume: vol, cancelToken: cancelSrc.Token),
+				            CrossTextToSpeech.Current.Speak("Queue 2", lang, volume: vol, cancelToken: cancelSrc.Token),
+				            CrossTextToSpeech.Current.Speak("Queue 3", lang, volume: vol, cancelToken: cancelSrc.Token),
+				            CrossTextToSpeech.Current.Speak("Queue 4", lang, volume: vol, cancelToken: cancelSrc.Token),
+				            CrossTextToSpeech.Current.Speak("Queue 5", lang, volume: vol, cancelToken: cancelSrc.Token)
 			            );
 		            }
 		            else
@@ -74,7 +80,10 @@ namespace Samples
                     if (cancelSrc == null)
                     {
                         cancelSrc = new CancellationTokenSource();
-                        await CrossTextToSpeech.Current.Speak(MSG, lang, volume: (float)volumeSlider.Value, cancelToken: cancelSrc.Token);
+						float? vol = null;
+						if (volumeSwitch.IsToggled)
+							vol = (float)volumeSlider.Value;
+						await CrossTextToSpeech.Current.Speak(MSG, lang, volume: vol, cancelToken: cancelSrc.Token);
                         cancelSrc = null;
                     }
                     else
@@ -132,7 +141,9 @@ namespace Samples
 						language,
 						pickLanguage,
 						new Label{Text = "volume"},
-						volumeSlider
+						volumeSlider,
+						new Label {Text ="use custom volume"},
+						volumeSwitch
 					}
                 }
             };

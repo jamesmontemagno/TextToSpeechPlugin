@@ -58,12 +58,13 @@ namespace Plugin.TextToSpeech
 
 				using (cancelToken.Register(OnCancel))
 				{
-                    speechSynthesizer.Volume = NormalizeVolume(volume);
+					if(volume.HasValue)
+						speechSynthesizer.Volume = NormalizeVolume(volume);
 
-                    if (speakRate != null)
+                    if (speakRate.HasValue)
                         speechSynthesizer.Rate = speakRate.Value;
 
-                    if (crossLocale != null)
+                    if (crossLocale.HasValue)
                         speechSynthesizer.Voice = crossLocale.Value.Language;
 
 
