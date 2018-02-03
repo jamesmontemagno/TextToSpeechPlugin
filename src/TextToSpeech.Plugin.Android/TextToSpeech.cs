@@ -189,24 +189,18 @@ namespace Plugin.TextToSpeech
 			count++;
 			
 
-			if (volume.HasValue)
+			
+			var map = new Dictionary<string, string>
 			{
-				var b = new Bundle();
-				if (volume.Value > 1.0f)
-					volume = 1.0f;
-				else if (volume.Value < 0.0f)
-					volume = 0.0f;
-				b.PutFloat(key: "KEY_PARAM_VOLUME", value: volume.Value);
-				textToSpeech.Speak(text, QueueMode.Flush, b, count.ToString());
-			}
-			else
+				[Android.Speech.Tts.TextToSpeech.Engine.KeyParamUtteranceId] = count.ToString()
+			};
+
+			if(volume.HasValue)
 			{
-				var map = new Dictionary<string, string>
-				{
-					[Android.Speech.Tts.TextToSpeech.Engine.KeyParamUtteranceId] = count.ToString()
-				};
-				textToSpeech.Speak(text, QueueMode.Flush, map);
+				map.Add(Android.Speech.Tts.TextToSpeech.Engine.KeyParamVolume, volume.ToString());
 			}
+			textToSpeech.Speak(text, QueueMode.Flush, map);
+			
 #pragma warning restore CS0618 // Type or member is obsolete
 
 
