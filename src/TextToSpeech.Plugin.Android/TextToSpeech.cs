@@ -54,8 +54,8 @@ namespace Plugin.TextToSpeech
         {
             if (status.Equals(OperationResult.Success))
             {
+				initialized = true;
                 initTcs.TrySetResult(true);
-                initialized = true;
             }
             else
             {
