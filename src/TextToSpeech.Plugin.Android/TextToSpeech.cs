@@ -82,7 +82,7 @@ namespace Plugin.TextToSpeech
             if (text == null)
                 throw new ArgumentNullException(nameof(text), "Text can not be null");
 
-            if (text.Length > MaxSpeechInputLength)
+            if (text.Length >= MaxSpeechInputLength)
                 throw new ArgumentException(nameof(text), "Text length is over the maximum speech input length.");
 
             try
