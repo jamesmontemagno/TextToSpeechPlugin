@@ -25,24 +25,24 @@ namespace Plugin.TextToSpeech
         CrossLocale? language;
         float pitch, speakRate;
 		float? volume;
-        bool initialized;
 		int count;
 
-
         TaskCompletionSource<bool> initTcs;
-        Task Init()
-        {
-            if (initialized)
-                return Task.FromResult(true);
+		Task onInit;
 
+		/// <summary>
+		/// Creates a new instance of TextToSpeech
+		/// </summary>
+		public TextToSpeech()
+		{
             initTcs = new TaskCompletionSource<bool>();
 
             Console.WriteLine("Current version: " + (int)global::Android.OS.Build.VERSION.SdkInt);
             Android.Util.Log.Info("CrossTTS", "Current version: " + (int)global::Android.OS.Build.VERSION.SdkInt);
             textToSpeech = new Android.Speech.Tts.TextToSpeech(Application.Context, this);
 
-            return initTcs.Task;
-        }
+            onInit = initTcs.Task;
+		}
 
 
         #region IOnInitListener implementation
@@ -54,7 +54,6 @@ namespace Plugin.TextToSpeech
         {
             if (status.Equals(OperationResult.Success))
             {
-				initialized = true;
                 initTcs.TrySetResult(true);
             }
             else
@@ -96,7 +95,7 @@ namespace Plugin.TextToSpeech
 
 
                 // TODO: need to wait lock so not to break people using queuing mechanism
-                await Init();
+                await onInit;
 				
 
 				await Speak(cancelToken);
@@ -222,8 +221,8 @@ namespace Plugin.TextToSpeech
         /// <returns>List of CrossLocales</returns>
         public async Task<IEnumerable<CrossLocale>> GetInstalledLanguages()
         {
-			await Init();
-            if (textToSpeech != null && initialized)
+			await onInit;
+            if (textToSpeech != null)
             {
                 var version = (int)global::Android.OS.Build.VERSION.SdkInt;
                 var isLollipop = version >= 21;
@@ -301,7 +300,6 @@ namespace Plugin.TextToSpeech
             textToSpeech?.Stop();
             textToSpeech?.Dispose();
             textToSpeech = null;
-			initialized = false;
         }
     }
 }
