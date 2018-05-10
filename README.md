@@ -10,8 +10,8 @@ Preview: http://screencast.com/t/voW1P48Ka
 * **Install into your PCL project and Client projects**.
 
 Build status: 
-* [![Build status](https://ci.appveyor.com/api/projects/status/ucwvippb5awrsqmg?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/texttospeechplugin)
-* CI NuGet Feed: https://ci.appveyor.com/nuget/texttospeechplugin
+* ![](https://jamesmontemagno.visualstudio.com/_apis/public/build/definitions/6b79a378-ddd6-4e31-98ac-a12fcd68644c/23/badge)
+* CI NuGet Feed: http://myget.org/F/xamarin-plugins
 
 **Platform Support**
 
