@@ -155,9 +155,7 @@
       <Visible>false</Visible>
     </ImageAsset>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
@@ -175,15 +173,9 @@
     <InterfaceDefinition Include="Resources\Main~.storyboard" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
-      <Project>{a9a66f86-2187-4272-aeb7-3fd72f341d87}</Project>
-      <Name>TextToSpeech.Plugin.Abstractions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.tvOS\TextToSpeech.Plugin.tvOS.csproj">
-      <Project>{8539e681-67ac-4d06-a0a0-243deb0a5623}</Project>
-      <Name>TextToSpeech.Plugin.tvOS</Name>
-      <IsAppExtension>false</IsAppExtension>
-      <IsWatchApp>false</IsWatchApp>
+    <ProjectReference Include="..\TextToSpeech.Plugin\TextToSpeech.Plugin.csproj">
+      <Project>{89c2004c-7253-4c94-a7eb-b9b3924d49c1}</Project>
+      <Name>TextToSpeech.Plugin</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />

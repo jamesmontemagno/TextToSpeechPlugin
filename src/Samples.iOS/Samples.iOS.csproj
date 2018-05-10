@@ -135,19 +135,13 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj">
-      <Project>{a9a66f86-2187-4272-aeb7-3fd72f341d87}</Project>
-      <Name>TextToSpeech.Plugin.Abstractions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\TextToSpeech.Plugin.iOS\TextToSpeech.Plugin.iOS.csproj">
-      <Project>{cc4ca81f-6b30-4a3a-ae87-005350a885fb}</Project>
-      <Name>TextToSpeech.Plugin.iOS</Name>
-      <IsAppExtension>false</IsAppExtension>
-      <IsWatchApp>false</IsWatchApp>
-    </ProjectReference>
     <ProjectReference Include="..\Samples\Samples.csproj">
       <Project>{64bce686-4ef2-494e-8fce-ef7393293a2f}</Project>
       <Name>Samples</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TextToSpeech.Plugin\TextToSpeech.Plugin.csproj">
+      <Project>{89c2004c-7253-4c94-a7eb-b9b3924d49c1}</Project>
+      <Name>TextToSpeech.Plugin</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

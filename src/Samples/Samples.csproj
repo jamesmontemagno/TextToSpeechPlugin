@@ -10,7 +10,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\TextToSpeech.Plugin.Abstractions\TextToSpeech.Plugin.Abstractions.csproj" />
       <ProjectReference Include="..\..\src\TextToSpeech.Plugin\TextToSpeech.Plugin.csproj" />
     </ItemGroup>
 
