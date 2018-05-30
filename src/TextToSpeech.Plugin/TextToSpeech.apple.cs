@@ -14,7 +14,6 @@ namespace Plugin.TextToSpeech
     /// </summary>
     public class TextToSpeech : ITextToSpeech, IDisposable
     {
-        readonly AVSpeechSynthesizer speechSynthesizer;
         readonly SemaphoreSlim semaphore;
 
 
@@ -23,7 +22,6 @@ namespace Plugin.TextToSpeech
         /// </summary>
         public TextToSpeech()
         {
-            speechSynthesizer = new AVSpeechSynthesizer();
             semaphore = new SemaphoreSlim(1, 1);
         }
 
@@ -152,11 +150,11 @@ namespace Plugin.TextToSpeech
         TaskCompletionSource<object> currentSpeak;
         async Task SpeakUtterance(AVSpeechUtterance speechUtterance, CancellationToken cancelToken)
         {
-            try
+			AVSpeechSynthesizer speechSynthesizer = new AVSpeechSynthesizer();
+			try
             {
-                currentSpeak = new TaskCompletionSource<object>();
-
-                speechSynthesizer.DidFinishSpeechUtterance += OnFinishedSpeechUtterance;
+                currentSpeak = new TaskCompletionSource<object>();				
+				speechSynthesizer.DidFinishSpeechUtterance += OnFinishedSpeechUtterance;
                 speechSynthesizer.SpeakUtterance(speechUtterance);
 				using (cancelToken.Register(TryCancel))
 				{
@@ -166,20 +164,21 @@ namespace Plugin.TextToSpeech
             finally
             {
                 speechSynthesizer.DidFinishSpeechUtterance -= OnFinishedSpeechUtterance;
-            }
-        }
+				speechSynthesizer.Dispose();
+			}
+
+			void OnFinishedSpeechUtterance(object sender, AVSpeechSynthesizerUteranceEventArgs args) =>
+				currentSpeak?.TrySetResult(null);
+
+			void TryCancel()
+			{
+				speechSynthesizer?.StopSpeaking(AVSpeechBoundary.Word);
+				currentSpeak?.TrySetCanceled();
+			}
+		}
 
 
-        void OnFinishedSpeechUtterance(object sender, AVSpeechSynthesizerUteranceEventArgs args) =>
-			currentSpeak?.TrySetResult(null);
 
-
-
-        void TryCancel()
-        {
-            speechSynthesizer?.StopSpeaking(AVSpeechBoundary.Word);
-            currentSpeak?.TrySetCanceled();
-        }
 
         /// <summary>
         /// Gets the max string length of the speech engine
@@ -187,10 +186,10 @@ namespace Plugin.TextToSpeech
         /// </summary>
         public int MaxSpeechInputLength => -1;
 
-        /// <summary>
-        /// Dispose of TTS
-        /// </summary>
-        public void Dispose() =>  speechSynthesizer?.Dispose();
+		/// <summary>
+		/// Dispose of TTS
+		/// </summary>
+		public void Dispose() { /*not needed anymore since speechSynth is now created each time we speak*/ }
 
     }
 }
