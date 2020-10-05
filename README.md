@@ -10,7 +10,7 @@ Preview: http://screencast.com/t/voW1P48Ka
 * **Install into your PCL project and Client projects**.
 
 Build status: 
-* ![](https://jamesmontemagno.visualstudio.com/_apis/public/build/definitions/6b79a378-ddd6-4e31-98ac-a12fcd68644c/23/badge)
+* ![](https://jamesmontemagno.visualstudio.com/_apis/public/build/definitions/6b79a378-ddd6-4e31-98ac-a12fcd68644c/23/badge?WT.mc_id=texttospeechplugin-github-jamont)
 * CI NuGet Feed: http://myget.org/F/xamarin-plugins
 
 ### The Future: [Xamarin.Essentials](https://docs.microsoft.com/xamarin/essentials/index?WT.mc_id=docs-github-jamont)
